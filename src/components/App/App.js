@@ -1,29 +1,26 @@
-import React, { Component } from 'react';
-import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
+import React from "react";
 
-import GardenContainer from '../GardenContainer/GardenContainer';
-import PlanContainer from '../PlanContainer/PlanContainer';
-import SeedListContainer from '../SeedListContainer/SeedListContainer';
-import './App.css';
+import GardenContainer from "../Garden/GardenContainer";
+import SeedList from "../SeedList/SeedList";
 
-class App extends Component {
-  render() {
-    return (
-      <Router>
-        <div className="App">
-          <h1>TimeGarden</h1>
-          <ul>
-            <Link to="/">Garden</Link>
-            <Link to="/plan">Garden Plan</Link>
-            <Link to="/seedlist">Seed Inventory</Link>
-          </ul>
-          <Route exact path='/' component={GardenContainer} />{/*exact path needed because otherwise the slashes will all match the home route*/}
-          <Route path='/plan' component={PlanContainer} />
-          <Route path='/seedlist' component={SeedListContainer} />
-        </div>
-      </Router>
-    );
-  }
-}
+const App = props => {
+  const { projects, refresh, editingProjectID, compost } = props;
+  return (
+    <div className="App">
+      <h1>TimeGarden</h1>
+      <GardenContainer
+        projects={projects}
+        refresh={refresh}
+        editingProjectID={editingProjectID}
+      />
+      <SeedList
+        projects={projects}
+        refresh={refresh}
+        editingProjectID={editingProjectID}
+        compost={compost}
+      />
+    </div>
+  );
+};
 
 export default App;
