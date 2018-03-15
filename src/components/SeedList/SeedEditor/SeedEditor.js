@@ -3,7 +3,7 @@ import React from "react";
 import seedEditorStyle from "./SeedEditorStyles.js";
 
 const SeedEditor = props => {
-  const { handleSubmit, handleChange } = props;
+  const { handleSubmit, handleChange, title, description } = props;
   return (
     <form onSubmit={handleSubmit} style={seedEditorStyle.background}>
       <h2>Seed Editor</h2>
@@ -12,6 +12,7 @@ const SeedEditor = props => {
           name="title"
           type="text"
           placeholder="Enter the post title"
+          value={title}
           onChange={handleChange}
         />
       </div>
@@ -19,6 +20,7 @@ const SeedEditor = props => {
         <textarea
           name="description"
           placeholder="Enter the post description"
+          value={description}
           onChange={handleChange}
         />
       </div>

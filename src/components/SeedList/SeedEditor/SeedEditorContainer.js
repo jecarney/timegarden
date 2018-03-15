@@ -12,14 +12,12 @@ class SeedEditorContainer extends React.Component {
   };
 
   handleChange = e => {
-    console.log("handlechange");
     this.setState({
       [e.target.name]: e.target.value
     });
   };
 
   handleSubmit = e => {
-    console.log("handlesubmit");
     e.preventDefault();
     const { title, description } = this.state;
     this.setState({

@@ -9,7 +9,7 @@ class AppContainer extends Component {
   };
 
   refresh = () => {
-    console.log("called refresh");
+    console.log("refresh");
     axios.get("/projects").then(res => {
       const data = res.data;
       if (data.payload) {
@@ -19,7 +19,8 @@ class AppContainer extends Component {
   };
 
   compost = id => {
-    console.log("deleting " + id);
+    console.log(`deleting ${id}`);
+    axios.delete(`/projects/${id}`).then(this.refresh());
   };
 
   componentDidMount() {
