@@ -2,6 +2,7 @@ import React from "react";
 import SeedStyle from "./SeedStyles";
 const Seed = props => {
   const { name, description, _id, compost } = props;
+  console.log("seed");
   return (
     <li style={SeedStyle.background}>
       <p>{name}</p>
