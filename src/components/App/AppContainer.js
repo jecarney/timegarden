@@ -4,23 +4,47 @@ import App from "./App";
 
 class AppContainer extends Component {
   state = {
-    projects: [],
-    editingProjectID: null
+    editingPlant: null,
+    plantEditorActive: false,
+    plants: []
   };
 
-  refresh = () => {
-    console.log("refresh");
-    axios.get("/projects").then(res => {
-      const data = res.data;
-      if (data.payload) {
-        this.setState({ projects: data.payload });
-      }
+  compost = _id => {
+    axios.delete(`/plants/${_id}`).then(this.refresh);
+  };
+
+  editingPlantSelect = _id => {
+    //TODO: add error handling if can't find plant by _id
+    const editingPlant = Object.assign(
+      {},
+      this.state.plants.find(plant => plant._id === _id)
+    );
+    this.setState({ editingPlant });
+    this.plantEditorOpen();
+  };
+
+  editingPlantDeselect = () => {
+    this.setState({ editingPlant: null });
+  };
+
+  plantEditorOpen = () => {
+    this.setState({ plantEditorActive: true });
+  };
+
+  plantEditorClose = () => {
+    this.setState({
+      plantEditorActive: false,
+      editingPlant: null
     });
   };
 
-  compost = id => {
-    console.log(`deleting ${id}`);
-    axios.delete(`/projects/${id}`).then(this.refresh());
+  refresh = () => {
+    axios.get("/plants").then(res => {
+      const data = res.data;
+      if (data.payload) {
+        this.setState({ plants: data.payload });
+      }
+    });
   };
 
   componentDidMount() {
@@ -30,10 +54,15 @@ class AppContainer extends Component {
   render() {
     return (
       <App
-        projects={this.state.projects}
-        refresh={this.refresh}
-        editingProjectID={this.state.editingProjectID}
         compost={this.compost}
+        editingPlant={this.state.editingPlant}
+        editingPlantDeselect={this.editingPlantDeselect}
+        editingPlantSelect={this.editingPlantSelect}
+        plantEditorActive={this.state.plantEditorActive}
+        plantEditorClose={this.plantEditorClose}
+        plantEditorOpen={this.plantEditorOpen}
+        plants={this.state.plants}
+        refresh={this.refresh}
       />
     );
   }

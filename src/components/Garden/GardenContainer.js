@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import axios from "axios";
+// import axios from "axios";
 
 import Garden from "./Garden";
 
@@ -14,8 +14,7 @@ class GardenContainer extends Component {
   render() {
     return (
       <div>
-        <p>Hi I'm the GardenContainer</p>
-        <Garden projects={this.props.projects} />
+        <Garden plants={this.props.plants} />
       </div>
     );
   }

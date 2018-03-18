@@ -1,13 +1,14 @@
 import React from "react";
 import SeedStyle from "./SeedStyles";
 const Seed = props => {
-  const { name, description, _id, compost } = props;
+  const { compost, description, _id, name, editingPlantSelect } = props;
   return (
-    <li style={SeedStyle.background}>
+    <div style={SeedStyle.background}>
       <p>{name}</p>
       <p>{description}</p>
       <button onClick={() => compost(_id)}>Compost Seed</button>
-    </li>
+      <button onClick={() => editingPlantSelect(_id)}>Edit Plant</button>
+    </div>
   );
 };
 

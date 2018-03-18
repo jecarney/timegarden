@@ -1,11 +1,12 @@
 import React from "react";
 
 const Bed = props => {
-  const { name, id } = props;
+  const { percentTime, plantName } = props;
   return (
-    <li key={id}>
-      <p>{name}</p>
-    </li>
+    <div>
+      <p>{plantName}</p>
+      <p>{percentTime}</p>
+    </div>
   );
 };
 
