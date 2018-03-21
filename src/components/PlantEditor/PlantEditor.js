@@ -6,6 +6,7 @@ const PlantEditor = props => {
   const {
     description,
     handleChange,
+    handleChangeCheckbox,
     handleSubmit,
     percentTime,
     plantEditorClose,
@@ -32,6 +33,15 @@ const PlantEditor = props => {
             value={description}
             onChange={handleChange}
           />
+        </div>
+        <div>
+          <input
+            id="inGarden"
+            name="inGarden"
+            type="checkbox"
+            onClick={handleChange}
+          />
+          <label htmlFor="inGarden">Plant it?</label>
         </div>
         <div>
           <input

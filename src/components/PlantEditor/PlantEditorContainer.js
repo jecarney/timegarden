@@ -6,27 +6,28 @@ import PlantEditor from "./PlantEditor";
 const INITIAL_STATE = {
   plantName: "",
   description: "",
-  percentTime: 0
+  percentTime: 0,
+  inGarden: false
 };
 
 class PlantEditorContainer extends React.Component {
   state = INITIAL_STATE;
 
-  //TODO: is there any way to destructure here so I don't need to keep writing this.props.blah
-
   handleChange = e => {
+    const { value, type, checked, name } = e.target;
+    const newValue = type === "checkbox" ? checked : value;
     this.setState({
-      [e.target.name]: e.target.value
+      [name]: newValue
     });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    const { plantName, description, percentTime } = this.state;
+    const { plantName, description, percentTime, inGarden } = this.state;
     const { editingPlant } = this.props;
     const newAttributes = Object.assign(
       {},
-      { plantName, description, percentTime }
+      { plantName, description, percentTime, inGarden }
     );
 
     if (editingPlant !== null) {
@@ -65,6 +66,7 @@ class PlantEditorContainer extends React.Component {
           description={this.state.description}
           editingPlant={this.props.editingPlant}
           handleChange={this.handleChange}
+          handleChangeCheckbox={this.handleChangeCheckbox}
           handleSubmit={this.handleSubmit}
           percentTime={this.state.percentTime}
           plantEditorClose={this.props.plantEditorClose}

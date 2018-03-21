@@ -12,9 +12,10 @@ class GardenContainer extends Component {
   //
 
   render() {
+    const plantedPlants = this.props.plants.filter(plant => plant.inGarden);
     return (
       <div>
-        <Garden plants={this.props.plants} />
+        <Garden plantedPlants={plantedPlants} />
       </div>
     );
   }
