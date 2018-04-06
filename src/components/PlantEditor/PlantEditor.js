@@ -1,13 +1,17 @@
 import React from "react";
+import TextField from "material-ui/TextField";
+import Checkbox from "material-ui/Checkbox";
 
-import plantEditorStyle from "./PlantEditorStyles.js";
+import plantEditorContainer from "./plantEditorContainer";
+
+import plantEditorStyle from "./PlantEditorStyles";
 
 const PlantEditor = props => {
   const {
     description,
     handleChange,
-    handleChangeCheckbox,
     handleSubmit,
+    inGarden,
     percentTime,
     plantEditorClose,
     plantName
@@ -18,7 +22,7 @@ const PlantEditor = props => {
       <form onSubmit={handleSubmit} style={plantEditorStyle.background}>
         <h2>Plant Editor</h2>
         <div>
-          <input
+          <TextField
             name="plantName"
             type="text"
             placeholder="Enter the plant name"
@@ -27,7 +31,7 @@ const PlantEditor = props => {
           />
         </div>
         <div>
-          <textarea
+          <TextField
             name="description"
             placeholder="Enter the post description"
             value={description}
@@ -35,16 +39,15 @@ const PlantEditor = props => {
           />
         </div>
         <div>
-          <input
-            id="inGarden"
+          <Checkbox
             name="inGarden"
-            type="checkbox"
+            label="Plant it?"
+            checked={inGarden}
             onClick={handleChange}
           />
-          <label htmlFor="inGarden">Plant it?</label>
         </div>
         <div>
-          <input
+          <TextField
             name="percentTime"
             type="text"
             placeholder="Enter the percentage of your free time you'd like to work on this plant"
@@ -58,4 +61,4 @@ const PlantEditor = props => {
   );
 };
 
-export default PlantEditor;
+export default plantEditorContainer(PlantEditor);
