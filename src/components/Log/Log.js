@@ -1,14 +1,3 @@
-// {
-//   "todayFreeHours":0,
-//   "todaysPlants":[
-//     {"absoluteEffortHours":0,
-//       "proportionalEffortMins":0,
-//       "_id":"5ab9a74828ea5f1abf2eb1ea"}
-//   ],
-//   "_id":"5ac66f7a2b9fc604c5fdbcc5",
-//   "todaysDate":"20180405",
-//   "__v":0
-// }
 import React from "react";
 import Slider from "material-ui/Slider";
 
@@ -39,19 +28,22 @@ const Log = props => {
         <span>{todayFreeHours}</span>
         {todayFreeHours > 0 ? (
           todaysPlants.map((plant, i) => (
-            <Slider
-              key={plant._id}
-              min={0}
-              max={todayFreeHours || 1}
-              step={0.25}
-              value={plant["absoluteEffortHours"]}
-              onChange={sliderChange.bind(
-                null,
-                "todaysPlants",
-                plant._id,
-                "absoluteEffortHours"
-              )}
-            />
+            <div>
+              <Slider
+                key={plant._id}
+                min={0}
+                max={todayFreeHours || 1}
+                step={0.25}
+                value={plant["absoluteEffortHours"]}
+                onChange={sliderChange.bind(
+                  null,
+                  "todaysPlants",
+                  plant._id,
+                  "absoluteEffortHours"
+                )}
+              />
+              <span>{plant["absoluteEffortHours"]}</span>
+            </div>
           ))
         ) : (
           <p>How much free time did you have today?</p>

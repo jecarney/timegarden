@@ -14,7 +14,9 @@ class AppContainer extends Component {
     plants: [],
     seedListActive: false,
     snapShots: [],
-    todaysDate: moment().format("YYYYMMDD"), //TODO: is this ok?
+    todaysDate: moment() //TODO: is this ok?
+      .format("YYYYMMDD")
+      .toString(),
     todayFreeHours: 0,
     todayFreeHoursUnspent: 0,
     todaysPlants: []
@@ -103,19 +105,23 @@ class AppContainer extends Component {
   };
 
   snapShotGet = () => {
-    axios.get(`/snapShot`).then(res => {
+    const { todaysDate } = this.state;
+    axios.get(`/snapShot/${todaysDate}`).then(res => {
       const data = res.data;
-      if (data.payload) {
-        // console.log(JSON.stringify(data.payload));
+      if (data.payload.length) {
         const snapShots = data.payload;
-        const todaySnapShot = snapShots.find(
-          snapShot => snapShot.todaysDate === this.state.todaysDate
-        );
-        this.setState({
-          snapShots: snapShots,
-          todayFreeHours: todaySnapShot.todayFreeHours,
-          todaysPlants: todaySnapShot.todaysPlants
+        let todaySnapShot = snapShots.find(snapShot => {
+          return snapShot.todaysDate === todaysDate;
         });
+        if (todaySnapShot) {
+          this.setState({
+            snapShots: snapShots,
+            todayFreeHours: todaySnapShot.todayFreeHours,
+            todaysPlants: todaySnapShot.todaysPlants
+          });
+        } else {
+          throw new Error("Today's snapshot doesn't exist.");
+        }
       } else {
         this.snapShotPost(this.snapShotInit());
       }
@@ -124,25 +130,19 @@ class AppContainer extends Component {
 
   snapShotPost = newSnapShot => {
     const { todaysDate, todaysPlants } = newSnapShot;
-    axios
-      .post("/snapShot", { todaysDate, todaysPlants })
-      .then(this.props.refresh);
+    axios.post("/snapShot", { todaysDate, todaysPlants }).then(this.refresh);
   };
 
   snapShotInit = () => {
     const { todaysDate } = this.state;
     let snapShot = {
       todaysDate: todaysDate,
-      // todayFreeHours: 0,
       todaysPlants: []
     };
     this.state.plants.map((plant, i) => {
       if (plant.inGarden) {
         snapShot.todaysPlants.push({
-          //TODO: can be less verbose, try using defaults from model
           _id: plant._id
-          // absoluteEffortHours: 0,
-          // proportionalEffortMins: 0
         });
       }
     });
@@ -153,10 +153,6 @@ class AppContainer extends Component {
     const { todayFreeHours, todaysPlants } = this.state;
     console.log(todaysPlants);
     const todayFreeHoursUsed = todaysPlants.reduce((acc, curr) => {
-      // console.log("acc");
-      // console.log(acc);
-      // console.log("curr");
-      // console.log(curr);
       acc.absoluteEffortHours + curr.absoluteEffortHours;
     }, 0);
     console.log(todayFreeHoursUsed);
