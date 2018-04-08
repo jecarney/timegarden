@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 
-export default function plantEditorContainer(WrappedComponent) {
+export default function PlantEditorContainer(WrappedComponent) {
   const INITIAL_STATE = {
     description: "",
     inGarden: false,

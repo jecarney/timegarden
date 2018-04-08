@@ -2,7 +2,7 @@ import React from "react";
 import TextField from "material-ui/TextField";
 import Checkbox from "material-ui/Checkbox";
 
-import plantEditorContainer from "./plantEditorContainer";
+import PlantEditorContainer from "./PlantEditorContainer";
 
 import plantEditorStyle from "./PlantEditorStyles";
 
@@ -61,4 +61,4 @@ const PlantEditor = props => {
   );
 };
 
-export default plantEditorContainer(PlantEditor);
+export default PlantEditorContainer(PlantEditor);
