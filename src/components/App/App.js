@@ -58,28 +58,30 @@ const App = props => {
     return (
       <div className="App">
         <h1>TimeGarden</h1>
-        {logActive ? (
-          <div>
-            <Log
-              logClose={logClose}
-              plants={plants}
-              sliderChange={sliderChange}
-              todayFreeHours={todayFreeHours}
-              todaysPlants={todaysPlants}
-            />
-            <GardenContainer
-              plants={plants}
-              refresh={refresh}
-              editingPlant={editingPlant}
-            />
-          </div>
-        ) : (
+        {
+          //   logActive ? (
+          //   <div>
+          //     <Log
+          //       logClose={logClose}
+          //       plants={plants}
+          //       sliderChange={sliderChange}
+          //       todayFreeHours={todayFreeHours}
+          //       todaysPlants={todaysPlants}
+          //     />
+          //     <GardenContainer
+          //       plants={plants}
+          //       refresh={refresh}
+          //       editingPlant={editingPlant}
+          //     />
+          //   </div>
+          // ) : (
           <GardenContainer
             plants={plants}
             refresh={refresh}
             editingPlant={editingPlant}
           />
-        )}
+          // )
+        }
       </div>
     );
   }

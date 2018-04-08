@@ -12,14 +12,14 @@ class AppContainer extends Component {
     logActive: true,
     plantEditorActive: false,
     plants: [],
-    seedListActive: false,
-    snapShots: [],
-    todaysDate: moment() //TODO: is this ok?
-      .format("YYYYMMDD")
-      .toString(),
-    todayFreeHours: 0,
-    todayFreeHoursUnspent: 0,
-    todaysPlants: []
+    seedListActive: false
+    // snapShots: [],
+    // todaysDate: moment() //TODO: is this ok?
+    //   .format("YYYYMMDD")
+    //   .toString(),
+    // todayFreeHours: 0,
+    // todayFreeHoursUnspent: 0,
+    // todaysPlants: []
   };
 
   compost = _id => {
@@ -79,88 +79,100 @@ class AppContainer extends Component {
 
   refresh = () => {
     this.plantsGet();
-    this.snapShotGet();
+    // this.snapShotGet();
   };
 
-  sliderChange = (name, id, attribute, e, value) => {
-    // is there a more generic way to handle two-way binding of array of objects?
-    if (name === "todaysPlants") {
-      const { todayFreeHours, todaysPlants } = this.state;
-      const updatedPlantSnapShotIndex = todaysPlants.findIndex(
-        plant => plant._id === id
-      );
-      const updatedTodaysPlants = this.copy(todaysPlants);
-      //update attribute in todaysPlants clone
-      updatedTodaysPlants[updatedPlantSnapShotIndex][attribute] = value;
+  // sliderChange = (name, id, attribute, e, value) => {
+  //   // is there a more generic way to handle two-way binding of array of objects?
+  //   if (name === "todaysPlants") {
+  //     const { todayFreeHours, todaysPlants } = this.state;
+  //     const updatedPlantSnapShotIndex = todaysPlants.findIndex(
+  //       plant => plant._id === id
+  //     );
+  //     const updatedTodaysPlants = this.copy(todaysPlants);
+  //     //update attribute in todaysPlants clone
+  //     updatedTodaysPlants[updatedPlantSnapShotIndex][attribute] = value;
+  //
+  //     this.setState({
+  //       todaysPlants: updatedTodaysPlants
+  //     });
+  //   } else {
+  //     this.setState({
+  //       [name]: value
+  //     });
+  //   }
+  //   this.todayFreeHoursUnspentUpdate();
+  // };
+  //
+  // //TODO: need to get snapShots completely from db... this is simply a list of all snapShots for display... should essentially be read-only
+  // // then the broken out pieces of state are used for form control and to post back to the db
+  // snapShotGet = () => {
+  //   const { todaysDate } = this.state;
+  //   axios.get(`/snapShot/${todaysDate}`).then(res => {
+  //     const data = res.data;
+  //     if (data.payload.length) {
+  //       const snapShots = data.payload;
+  //       const todaySnapShot = this.snapShotToday();
+  //       if (todaySnapShot) {
+  //         this.setState({
+  //           snapShots: snapShots,
+  //           todayFreeHours: todaySnapShot.todayFreeHours,
+  //           todaysPlants: todaySnapShot.todaysPlants
+  //         });
+  //       } else {
+  //         throw new Error("Today's snapshot doesn't exist.");
+  //       }
+  //     } else {
+  //       this.snapShotPost(snapShotUpdateFromPlants);
+  //     }
+  //   });
+  // };
+  //
+  // snapShotToday = () => {
+  //   snapShots.find(snapShot => {
+  //     return snapShot.todaysDate === todaysDate;
+  //   });
+  // };
 
-      this.setState({
-        todaysPlants: updatedTodaysPlants
-      });
-    } else {
-      this.setState({
-        [name]: value
-      });
-    }
-    this.todayFreeHoursUnspentUpdate();
-  };
-
-  snapShotGet = () => {
-    const { todaysDate } = this.state;
-    axios.get(`/snapShot/${todaysDate}`).then(res => {
-      const data = res.data;
-      if (data.payload.length) {
-        const snapShots = data.payload;
-        let todaySnapShot = snapShots.find(snapShot => {
-          return snapShot.todaysDate === todaysDate;
-        });
-        if (todaySnapShot) {
-          this.setState({
-            snapShots: snapShots,
-            todayFreeHours: todaySnapShot.todayFreeHours,
-            todaysPlants: todaySnapShot.todaysPlants
-          });
-        } else {
-          throw new Error("Today's snapshot doesn't exist.");
-        }
-      } else {
-        this.snapShotPost(this.snapShotInit());
-      }
-    });
-  };
-
-  snapShotPost = newSnapShot => {
-    const { todaysDate, todaysPlants } = newSnapShot;
-    axios.post("/snapShot", { todaysDate, todaysPlants }).then(this.refresh);
-  };
-
-  snapShotInit = () => {
-    const { todaysDate } = this.state;
-    let snapShot = {
-      todaysDate: todaysDate,
-      todaysPlants: []
-    };
-    this.state.plants.map((plant, i) => {
-      if (plant.inGarden) {
-        snapShot.todaysPlants.push({
-          _id: plant._id
-        });
-      }
-    });
-    return snapShot;
-  };
-
-  todayFreeHoursUnspentUpdate = () => {
-    const { todayFreeHours, todaysPlants } = this.state;
-    console.log(todaysPlants);
-    const todayFreeHoursUsed = todaysPlants.reduce((acc, curr) => {
-      acc.absoluteEffortHours + curr.absoluteEffortHours;
-    }, 0);
-    console.log(todayFreeHoursUsed);
-    const todayFreeHoursUnspent = todayFreeHours - todayFreeHoursUsed;
-    this.setState({
-      todayFreeHoursUnspent: todayFreeHoursUnspent
-    });
-  };
+  //get all from state - if it's missing from state only set defaults
+  // snapShotUpdate = () => {
+  //   const { todaysDate } = this.state;
+  //   let snapShot = {
+  //     todaysDate: todaysDate,
+  //     todaysPlants: []
+  //   };
+  //
+  //   this.snapShotPost(updatedSnapShot);
+  // };
+  //
+  // snapShotPost = newSnapShot => {
+  //   const { todaysDate, todaysPlants } = newSnapShot;
+  //   axios.post("/snapShot", { todaysDate, todaysPlants }).then(this.refresh);
+  // };
+  //
+  // todayFreeHoursUnspentUpdate = () => {
+  //   const { todayFreeHours, todaysPlants } = this.state;
+  //   console.log(todaysPlants);
+  //   const todayFreeHoursUsed = todaysPlants.reduce((acc, curr) => {
+  //     acc.absoluteEffortHours + curr.absoluteEffortHours;
+  //   }, 0);
+  //   console.log(todayFreeHoursUsed);
+  //   const todayFreeHoursUnspent = todayFreeHours - todayFreeHoursUsed;
+  //   this.setState({
+  //     todayFreeHoursUnspent: todayFreeHoursUnspent
+  //   });
+  // };
+  //
+  // todaysPlantsRefresh = () => {
+  //   const { plants } = this.state;
+  //   plants.map((plant, i) => {
+  //     if (plant.inGarden) {
+  //       snapShot.todaysPlants.push({
+  //         _id: plant._id
+  //       });
+  //     }
+  //   });
+  // };
 
   componentDidMount() {
     this.refresh();
