@@ -20,15 +20,15 @@ class AppContainer extends Component {
   };
 
   //https://www.codementor.io/avijitgupta/deep-copying-in-js-7x6q8vh5d
-  copy = o => {
-    var output, v, key;
-    output = Array.isArray(o) ? [] : {};
-    for (key in o) {
-      v = o[key];
-      output[key] = typeof v === "object" ? this.copy(v) : v;
-    }
-    return output;
-  };
+  // copy = o => {
+  //   var output, v, key;
+  //   output = Array.isArray(o) ? [] : {};
+  //   for (key in o) {
+  //     v = o[key];
+  //     output[key] = typeof v === "object" ? this.copy(v) : v;
+  //   }
+  //   return output;
+  // };
 
   editingPlantSelect = _id => {
     //TODO: add error handling if can't find plant by _id
