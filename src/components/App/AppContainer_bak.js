@@ -8,22 +8,22 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 class AppContainer extends Component {
   state = {
-    editingPlant: null,
+    editingProject: null,
     logActive: true,
-    plantEditorActive: false,
-    plants: [],
-    seedListActive: false,
+    projectEditorActive: false,
+    projects: [],
+    backlogListActive: false,
     snapShots: [],
     todaysDate: moment() //TODO: is this ok?
       .format("YYYYMMDD")
       .toString(),
     todayFreeHours: 0,
     todayFreeHoursUnspent: 0,
-    todaysPlants: []
+    todaysProjects: []
   };
 
-  compost = _id => {
-    axios.delete(`/plant/${_id}`).then(this.refresh);
+  erase = _id => {
+    axios.erase(`/project/${_id}`).then(this.refresh);
   };
 
   //https://www.codementor.io/avijitgupta/deep-copying-in-js-7x6q8vh5d
@@ -37,18 +37,18 @@ class AppContainer extends Component {
     return output;
   };
 
-  editingPlantSelect = _id => {
-    //TODO: add error handling if can't find plant by _id
-    const editingPlant = Object.assign(
+  editingProjectSelect = _id => {
+    //TODO: add error handling if can't find project by _id
+    const editingProject = Object.assign(
       {},
-      this.state.plants.find(plant => plant._id === _id)
+      this.state.projects.find(project => project._id === _id)
     );
-    this.setState({ editingPlant });
-    this.plantEditorOpen();
+    this.setState({ editingProject });
+    this.projectEditorOpen();
   };
 
-  editingPlantDeselect = () => {
-    this.setState({ editingPlant: null });
+  editingProjectDeselect = () => {
+    this.setState({ editingProject: null });
   };
 
   logClose = () => {
@@ -57,44 +57,44 @@ class AppContainer extends Component {
     });
   };
 
-  plantEditorOpen = () => {
-    this.setState({ plantEditorActive: true });
+  projectEditorOpen = () => {
+    this.setState({ projectEditorActive: true });
   };
 
-  plantEditorClose = () => {
+  projectEditorClose = () => {
     this.setState({
-      plantEditorActive: false,
-      editingPlant: null
+      projectEditorActive: false,
+      editingProject: null
     });
   };
 
-  plantsGet = () => {
-    axios.get("/plant").then(res => {
+  projectsGet = () => {
+    axios.get("/project").then(res => {
       const data = res.data;
       if (data.payload) {
-        this.setState({ plants: data.payload });
+        this.setState({ projects: data.payload });
       }
     });
   };
 
   refresh = () => {
-    this.plantsGet();
+    this.projectsGet();
     this.snapShotGet();
   };
 
   sliderChange = (name, id, attribute, e, value) => {
     // is there a more generic way to handle two-way binding of array of objects?
-    if (name === "todaysPlants") {
-      const { todayFreeHours, todaysPlants } = this.state;
-      const updatedPlantSnapShotIndex = todaysPlants.findIndex(
-        plant => plant._id === id
+    if (name === "todaysProjects") {
+      const { todayFreeHours, todaysProjects } = this.state;
+      const updatedProjectSnapShotIndex = todaysProjects.findIndex(
+        project => project._id === id
       );
-      const updatedTodaysPlants = this.copy(todaysPlants);
-      //update attribute in todaysPlants clone
-      updatedTodaysPlants[updatedPlantSnapShotIndex][attribute] = value;
+      const updatedTodaysProjects = this.copy(todaysProjects);
+      //update attribute in todaysProjects clone
+      updatedTodaysProjects[updatedProjectSnapShotIndex][attribute] = value;
 
       this.setState({
-        todaysPlants: updatedTodaysPlants
+        todaysProjects: updatedTodaysProjects
       });
     } else {
       this.setState({
@@ -117,13 +117,13 @@ class AppContainer extends Component {
           this.setState({
             snapShots: snapShots,
             todayFreeHours: todaySnapShot.todayFreeHours,
-            todaysPlants: todaySnapShot.todaysPlants
+            todaysProjects: todaySnapShot.todaysProjects
           });
         } else {
           throw new Error("Today's snapshot doesn't exist.");
         }
       } else {
-        this.snapShotPost(snapShotUpdateFromPlants);
+        this.snapShotPost(snapShotUpdateFromProjects);
       }
     });
   };
@@ -135,18 +135,18 @@ class AppContainer extends Component {
   };
 
   // state = {
-  //   editingPlant: null,
+  //   editingProject: null,
   //   logActive: true,
-  //   plantEditorActive: false,
-  //   plants: [],
-  //   seedListActive: false,
+  //   projectEditorActive: false,
+  //   projects: [],
+  //   backlogListActive: false,
   //   snapShots: [],
   //   todaysDate: moment() //TODO: is this ok?
   //     .format("YYYYMMDD")
   //     .toString(),
   //   todayFreeHours: 0,
   //   todayFreeHoursUnspent: 0,
-  //   todaysPlants: []
+  //   todaysProjects: []
   // };
 
   //get all from state - if it's missing from state only set defaults
@@ -154,22 +154,22 @@ class AppContainer extends Component {
     const { todaysDate } = this.state;
     let snapShot = {
       todaysDate: todaysDate,
-      todaysPlants: []
+      todaysProjects: []
     };
 
     this.snapShotPost(updatedSnapShot);
   };
 
   snapShotPost = newSnapShot => {
-    const { todaysDate, todaysPlants } = newSnapShot;
-    axios.post("/snapShot", { todaysDate, todaysPlants }).then(this.refresh);
+    const { todaysDate, todaysProjects } = newSnapShot;
+    axios.post("/snapShot", { todaysDate, todaysProjects }).then(this.refresh);
   };
 
   todayFreeHoursUnspentUpdate = () => {
-    const { todayFreeHours, todaysPlants } = this.state;
-    console.log(todaysPlants);
-    const todayFreeHoursUsed = todaysPlants.reduce((acc, curr) => {
-      acc.absoluteEffortHours + curr.absoluteEffortHours;
+    const { todayFreeHours, todaysProjects } = this.state;
+    console.log(todaysProjects);
+    const todayFreeHoursUsed = todaysProjects.reduce((acc, curr) => {
+      acc.absoluteEffortMins + curr.absoluteEffortMins;
     }, 0);
     console.log(todayFreeHoursUsed);
     const todayFreeHoursUnspent = todayFreeHours - todayFreeHoursUsed;
@@ -178,12 +178,12 @@ class AppContainer extends Component {
     });
   };
 
-  todaysPlantsRefresh = () => {
-    const { plants } = this.state;
-    plants.map((plant, i) => {
-      if (plant.inGarden) {
-        snapShot.todaysPlants.push({
-          _id: plant._id
+  todaysProjectsRefresh = () => {
+    const { projects } = this.state;
+    projects.map((project, i) => {
+      if (project.inProgress) {
+        snapShot.todaysProjects.push({
+          _id: project._id
         });
       }
     });
@@ -198,12 +198,12 @@ class AppContainer extends Component {
       <MuiThemeProvider>
         <App
           {...this.state}
-          compost={this.compost}
-          editingPlantDeselect={this.editingPlantDeselect}
-          editingPlantSelect={this.editingPlantSelect}
+          erase={this.erase}
+          editingProjectDeselect={this.editingProjectDeselect}
+          editingProjectSelect={this.editingProjectSelect}
           logClose={this.logClose}
-          plantEditorClose={this.plantEditorClose}
-          plantEditorOpen={this.plantEditorOpen}
+          projectEditorClose={this.projectEditorClose}
+          projectEditorOpen={this.projectEditorOpen}
           refresh={this.refresh}
           sliderChange={this.sliderChange}
         />

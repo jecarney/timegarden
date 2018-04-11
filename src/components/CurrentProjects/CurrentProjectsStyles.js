@@ -1,8 +1,8 @@
-const gardenStyle = {
+const currentProjectsStyle = {
   background: {
     backgroundColor: "green",
     height: "50%"
   }
 };
 
-export default gardenStyle;
+export default currentProjectsStyle;

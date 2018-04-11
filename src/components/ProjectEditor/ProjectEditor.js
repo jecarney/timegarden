@@ -2,31 +2,31 @@ import React from "react";
 import TextField from "material-ui/TextField";
 import Checkbox from "material-ui/Checkbox";
 
-import PlantEditorContainer from "./PlantEditorContainer";
+import ProjectEditorContainer from "./ProjectEditorContainer";
 
-import plantEditorStyle from "./PlantEditorStyles";
+import projectEditorStyle from "./ProjectEditorStyles";
 
-const PlantEditor = props => {
+const ProjectEditor = props => {
   const {
     description,
     handleChange,
     handleSubmit,
-    inGarden,
+    inProgress,
     percentTime,
-    plantEditorClose,
-    plantName
+    projectEditorClose,
+    projectName
   } = props;
   return (
     <div>
-      <button onClick={plantEditorClose}>Close Editor</button>
-      <form onSubmit={handleSubmit} style={plantEditorStyle.background}>
-        <h2>Plant Editor</h2>
+      <button onClick={projectEditorClose}>Close Editor</button>
+      <form onSubmit={handleSubmit} style={projectEditorStyle.background}>
+        <h2>Project Editor</h2>
         <div>
           <TextField
-            name="plantName"
+            name="projectName"
             type="text"
-            placeholder="Enter the plant name"
-            value={plantName}
+            placeholder="Enter the project name"
+            value={projectName}
             onChange={handleChange}
           />
         </div>
@@ -40,9 +40,9 @@ const PlantEditor = props => {
         </div>
         <div>
           <Checkbox
-            name="inGarden"
-            label="Plant it?"
-            checked={inGarden}
+            name="inProgress"
+            label="Project it?"
+            checked={inProgress}
             onClick={handleChange}
           />
         </div>
@@ -50,7 +50,7 @@ const PlantEditor = props => {
           <TextField
             name="percentTime"
             type="text"
-            placeholder="Enter the percentage of your free time you'd like to work on this plant"
+            placeholder="Enter the percentage of your free time you'd like to work on this project"
             value={percentTime}
             onChange={handleChange}
           />
@@ -61,4 +61,4 @@ const PlantEditor = props => {
   );
 };
 
-export default PlantEditorContainer(PlantEditor);
+export default ProjectEditorContainer(ProjectEditor);

@@ -1,84 +1,88 @@
 import React from "react";
 
-import GardenContainer from "../Garden/GardenContainer";
+import CurrentProjectsContainer from "../CurrentProjects/CurrentProjectsContainer";
 import Log from "../Log/Log";
-import PlantEditor from "../PlantEditor/PlantEditor";
-import Seed from "../SeedList/Seed/Seed";
-import SeedListLayout from "../SeedList/SeedListLayout";
+import ProjectEditor from "../ProjectEditor/ProjectEditor";
+import Backlog from "../BacklogList/Backlog/Backlog";
+import BacklogListLayout from "../BacklogList/BacklogListLayout";
 
 const App = props => {
   const {
-    compost,
-    editingPlant,
-    editingPlantDeselect,
-    editingPlantSelect,
+    erase,
+    editingProject,
+    editingProjectDeselect,
+    editingProjectSelect,
     logActive,
     logClose,
-    plantEditorActive,
-    plantEditorOpen,
-    plantEditorClose,
-    plants,
+    projectEditorActive,
+    projectEditorOpen,
+    projectEditorClose,
+    projects,
     refresh,
-    seedListActive,
+    backlogListActive,
     sliderChange,
+    snapShotUpdate,
     todayFreeHours,
-    todaysPlants
+    todaysProjects
   } = props;
 
-  if (plantEditorActive) {
+  if (projectEditorActive) {
     return (
       <div className="App">
-        <PlantEditor
-          editingPlant={editingPlant}
-          editingPlantDeselect={editingPlantDeselect}
+        <ProjectEditor
+          editingProject={editingProject}
+          editingProjectDeselect={editingProjectDeselect}
+          projectEditorClose={projectEditorClose}
           refresh={refresh}
-          plantEditorClose={plantEditorClose}
+          snapShotUpdate={snapShotUpdate}
         />
       </div>
     );
-  } else if (seedListActive) {
+  } else if (backlogListActive) {
     return (
       <div className="App">
-        <SeedListLayout plantEditorOpen={plantEditorOpen} plants={plants}>
+        <BacklogListLayout
+          projectEditorOpen={projectEditorOpen}
+          projects={projects}
+        >
           <ul>
-            {plants.map((plant, i) => (
-              <li key={plant._id}>
-                <Seed
-                  {...plant}
-                  compost={compost}
-                  editingPlantSelect={editingPlantSelect}
+            {projects.map((project, i) => (
+              <li key={project._id}>
+                <Backlog
+                  {...project}
+                  editingProjectSelect={editingProjectSelect}
+                  erase={erase}
                 />
               </li>
             ))}
           </ul>
-        </SeedListLayout>
+        </BacklogListLayout>
       </div>
     );
   } else {
     return (
       <div className="App">
-        <h1>TimeGarden</h1>
+        <h1>TimeCurrentProjects</h1>
         {
           //   logActive ? (
           //   <div>
           //     <Log
           //       logClose={logClose}
-          //       plants={plants}
+          //       projects={projects}
           //       sliderChange={sliderChange}
           //       todayFreeHours={todayFreeHours}
-          //       todaysPlants={todaysPlants}
           //     />
-          //     <GardenContainer
-          //       plants={plants}
+          //     <CurrentProjectsContainer
+          //       projects={projects}
           //       refresh={refresh}
-          //       editingPlant={editingPlant}
+          //       editingProject={editingProject}
           //     />
           //   </div>
           // ) : (
-          <GardenContainer
-            plants={plants}
+          <CurrentProjectsContainer
+            projects={projects}
             refresh={refresh}
-            editingPlant={editingPlant}
+            editingProject={editingProject}
           />
           // )
         }

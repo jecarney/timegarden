@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import moment from "moment";
+import update from "immutability-helper";
 
 import App from "./App";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -8,40 +9,30 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 class AppContainer extends Component {
   state = {
-    editingPlant: null,
+    editingProject: null,
     logActive: true,
-    plantEditorActive: false,
-    plants: [],
-    seedListActive: false
+    projectEditorActive: false,
+    projects: [],
+    backlogListActive: false,
+    todaysDate: null
   };
 
-  compost = _id => {
-    axios.delete(`/plant/${_id}`).then(this.refresh);
+  erase = _id => {
+    axios.erase(`/project/${_id}`).then(this.refresh);
   };
 
-  //https://www.codementor.io/avijitgupta/deep-copying-in-js-7x6q8vh5d
-  copy = o => {
-    var output, v, key;
-    output = Array.isArray(o) ? [] : {};
-    for (key in o) {
-      v = o[key];
-      output[key] = typeof v === "object" ? this.copy(v) : v;
-    }
-    return output;
-  };
-
-  editingPlantSelect = _id => {
-    //TODO: add error handling if can't find plant by _id
-    const editingPlant = Object.assign(
+  editingProjectSelect = _id => {
+    //TODO: add error handling if can't find project by _id
+    const editingProject = Object.assign(
       {},
-      this.state.plants.find(plant => plant._id === _id)
+      this.state.projects.find(project => project._id === _id)
     );
-    this.setState({ editingPlant });
-    this.plantEditorOpen();
+    this.setState({ editingProject });
+    this.projectEditorOpen();
   };
 
-  editingPlantDeselect = () => {
-    this.setState({ editingPlant: null });
+  editingProjectDeselect = () => {
+    this.setState({ editingProject: null });
   };
 
   logClose = () => {
@@ -50,28 +41,73 @@ class AppContainer extends Component {
     });
   };
 
-  plantEditorOpen = () => {
-    this.setState({ plantEditorActive: true });
+  projectEditorOpen = () => {
+    this.setState({ projectEditorActive: true });
   };
 
-  plantEditorClose = () => {
+  projectEditorClose = () => {
     this.setState({
-      plantEditorActive: false,
-      editingPlant: null
+      projectEditorActive: false,
+      editingProject: null
     });
   };
 
-  plantsGet = () => {
-    axios.get("/plant").then(res => {
-      const data = res.data;
-      if (data.payload) {
-        this.setState({ plants: data.payload });
+  projectsGet = () => {
+    axios.get("/project").then(res => {
+      const { payload } = res.data;
+      if (payload) {
+        this.setState({ projects: payload });
+        this.snapShotGet();
       }
     });
   };
 
   refresh = () => {
-    this.plantsGet();
+    this.projectsGet();
+    const todaysDate = moment()
+      .format("YYYYMMDD")
+      .toString();
+    this.setState({ todaysDate });
+  };
+
+  snapShotGet = () => {
+    //loop through all projects in currentProjects assigning them the values from snapShot.
+    //if there's no matching id in snapshots, assign the projects default 0s for those values.
+    const { projects, todaysDate } = this.state;
+    axios.get(`/snapShot/${todaysDate}`).then(res => {
+      const { payload } = res.data;
+      const todaysProjects = [];
+      if (payload) {
+        const todaysProjects = payload;
+      }
+      const newProjects = projects.map((project, i) => {
+        //if todaysProjects at the given id is missing, assign default 0s
+        const snapShotProject = todaysProjects[project._id] || {
+          absoluteEffortMins: 0,
+          proportionalEffortMins: 0
+        };
+        return {
+          ...project,
+          ...{
+            absoluteEffortMins: snapShotProject.absoluteEffortMins,
+            proportionalEffortMins: snapShotProject.proportionalEffortMins
+          }
+        }; //shallow clone of project, needs to be udpated if project structure gets nested
+      });
+      this.setState({ projects: newProjects });
+    });
+  };
+
+  snapShotUpdate = () => {
+    const { projects, todaysDate } = this.state;
+    const newSnapShot = projects.map((project, i) => {
+      return {
+        _id: project._id,
+        absoluteEffortMins: project.absoluteEffortMins,
+        proportionalEffortMins: project.proportionalEffortMins
+      };
+    });
+    axios.post(`/snapShot/${todaysDate}`, newSnapShot).then(this.refresh());
   };
 
   componentDidMount() {
@@ -83,14 +119,15 @@ class AppContainer extends Component {
       <MuiThemeProvider>
         <App
           {...this.state}
-          compost={this.compost}
-          editingPlantDeselect={this.editingPlantDeselect}
-          editingPlantSelect={this.editingPlantSelect}
+          erase={this.erase}
+          editingProjectDeselect={this.editingProjectDeselect}
+          editingProjectSelect={this.editingProjectSelect}
           logClose={this.logClose}
-          plantEditorClose={this.plantEditorClose}
-          plantEditorOpen={this.plantEditorOpen}
+          projectEditorClose={this.projectEditorClose}
+          projectEditorOpen={this.projectEditorOpen}
           refresh={this.refresh}
           sliderChange={this.sliderChange}
+          snapShotUpdate={this.snapShotUpdate}
         />
       </MuiThemeProvider>
     );

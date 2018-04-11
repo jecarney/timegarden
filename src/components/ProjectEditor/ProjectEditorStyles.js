@@ -1,6 +1,6 @@
 const projectEditorStyle = {
   background: {
-    backgroundColor: "grey"
+    backgroundColor: "blue"
   }
 };
 

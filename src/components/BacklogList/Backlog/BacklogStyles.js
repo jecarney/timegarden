@@ -1,7 +1,7 @@
-const SeedStyle = {
+const BacklogStyle = {
   background: {
     backgroundColor: "yellow"
   }
 };
 
-export default SeedStyle;
+export default BacklogStyle;

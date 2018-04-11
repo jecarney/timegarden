@@ -7,16 +7,16 @@ const Log = props => {
   const {
     handleSubmit,
     logClose,
+    projects,
     sliderChange,
-    todayFreeHours,
-    todaysPlants
+    todayFreeHours
   } = props;
-  // console.log(todaysPlants);
+  // console.log(todaysProjects);
   return (
     <div>
-      <button onClick={logClose}>Close Garden Log</button>
+      <button onClick={logClose}>Close CurrentProjects Log</button>
       <form onSubmit={handleSubmit} style={LogStyle.background}>
-        <h2>Garden Log</h2>
+        <h2>CurrentProjects Log</h2>
         <span>How much free time did I have today?</span>
         <Slider
           min={0}
@@ -27,22 +27,22 @@ const Log = props => {
         />
         <span>{todayFreeHours}</span>
         {todayFreeHours > 0 ? (
-          todaysPlants.map((plant, i) => (
+          projects.map((project, i) => (
             <div>
               <Slider
-                key={plant._id}
+                key={project._id}
                 min={0}
                 max={todayFreeHours || 1}
                 step={0.25}
-                value={plant["absoluteEffortHours"]}
+                value={project["absoluteEffortMins"]}
                 onChange={sliderChange.bind(
                   null,
-                  "todaysPlants",
-                  plant._id,
-                  "absoluteEffortHours"
+                  "todaysProjects",
+                  project._id,
+                  "absoluteEffortMins"
                 )}
               />
-              <span>{plant["absoluteEffortHours"]}</span>
+              <span>{project["absoluteEffortMins"]}</span>
             </div>
           ))
         ) : (

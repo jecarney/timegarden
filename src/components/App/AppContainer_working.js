@@ -8,15 +8,15 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 class AppContainer extends Component {
   state = {
-    editingPlant: null,
+    editingProject: null,
     logActive: true,
-    plantEditorActive: false,
-    plants: [],
-    seedListActive: false
+    projectEditorActive: false,
+    projects: [],
+    backlogListActive: false
   };
 
-  compost = _id => {
-    axios.delete(`/plant/${_id}`).then(this.refresh);
+  erase = _id => {
+    axios.erase(`/project/${_id}`).then(this.refresh);
   };
 
   //https://www.codementor.io/avijitgupta/deep-copying-in-js-7x6q8vh5d
@@ -30,18 +30,18 @@ class AppContainer extends Component {
   //   return output;
   // };
 
-  editingPlantSelect = _id => {
-    //TODO: add error handling if can't find plant by _id
-    const editingPlant = Object.assign(
+  editingProjectSelect = _id => {
+    //TODO: add error handling if can't find project by _id
+    const editingProject = Object.assign(
       {},
-      this.state.plants.find(plant => plant._id === _id)
+      this.state.projects.find(project => project._id === _id)
     );
-    this.setState({ editingPlant });
-    this.plantEditorOpen();
+    this.setState({ editingProject });
+    this.projectEditorOpen();
   };
 
-  editingPlantDeselect = () => {
-    this.setState({ editingPlant: null });
+  editingProjectDeselect = () => {
+    this.setState({ editingProject: null });
   };
 
   logClose = () => {
@@ -50,28 +50,28 @@ class AppContainer extends Component {
     });
   };
 
-  plantEditorOpen = () => {
-    this.setState({ plantEditorActive: true });
+  projectEditorOpen = () => {
+    this.setState({ projectEditorActive: true });
   };
 
-  plantEditorClose = () => {
+  projectEditorClose = () => {
     this.setState({
-      plantEditorActive: false,
-      editingPlant: null
+      projectEditorActive: false,
+      editingProject: null
     });
   };
 
-  plantsGet = () => {
-    axios.get("/plant").then(res => {
+  projectsGet = () => {
+    axios.get("/project").then(res => {
       const data = res.data;
       if (data.payload) {
-        this.setState({ plants: data.payload });
+        this.setState({ projects: data.payload });
       }
     });
   };
 
   refresh = () => {
-    this.plantsGet();
+    this.projectsGet();
   };
 
   componentDidMount() {
@@ -83,12 +83,12 @@ class AppContainer extends Component {
       <MuiThemeProvider>
         <App
           {...this.state}
-          compost={this.compost}
-          editingPlantDeselect={this.editingPlantDeselect}
-          editingPlantSelect={this.editingPlantSelect}
+          erase={this.erase}
+          editingProjectDeselect={this.editingProjectDeselect}
+          editingProjectSelect={this.editingProjectSelect}
           logClose={this.logClose}
-          plantEditorClose={this.plantEditorClose}
-          plantEditorOpen={this.plantEditorOpen}
+          projectEditorClose={this.projectEditorClose}
+          projectEditorOpen={this.projectEditorOpen}
           refresh={this.refresh}
           sliderChange={this.sliderChange}
         />

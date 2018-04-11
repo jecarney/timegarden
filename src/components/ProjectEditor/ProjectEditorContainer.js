@@ -1,12 +1,12 @@
 import React from "react";
 import axios from "axios";
 
-export default function PlantEditorContainer(WrappedComponent) {
+export default function ProjectEditorContainer(WrappedComponent) {
   const INITIAL_STATE = {
     description: "",
-    inGarden: false,
+    inProgress: false,
     percentTime: 0,
-    plantName: ""
+    projectName: ""
   };
 
   return class extends React.Component {
@@ -22,27 +22,28 @@ export default function PlantEditorContainer(WrappedComponent) {
 
     handleSubmit = e => {
       e.preventDefault();
-      const { plantName, description, percentTime, inGarden } = this.state;
-      const { editingPlant } = this.props;
+      const { projectName, description, percentTime, inProgress } = this.state;
+      const { editingProject } = this.props;
       const newAttributes = Object.assign(
         {},
-        { plantName, description, percentTime, inGarden }
+        { projectName, description, percentTime, inProgress }
       );
 
-      if (editingPlant !== null) {
-        newAttributes["_id"] = editingPlant._id;
-        axios.put("/plant", newAttributes).then(this.handleSubmitSuccess);
+      if (editingProject !== null) {
+        newAttributes["_id"] = editingProject._id;
+        axios.put("/project", newAttributes).then(this.handleSubmitSuccess);
       } else {
-        axios.post("/plant", newAttributes).then(this.handleSubmitSuccess);
+        axios.post("/project", newAttributes).then(this.handleSubmitSuccess);
       }
     };
 
     handleSubmitSuccess = () => {
-      this.props.refresh();
+      const { snapShotUpdate } = this.props;
+      snapShotUpdate(); //TODO: snapShotUpdate calls refresh, but would prefer to be more explicit
       this.reinit();
-      this.props.plantEditorClose();
-      if (this.props.editingPlant !== null) {
-        this.props.editingPlantDeselect();
+      this.props.projectEditorClose();
+      if (this.props.editingProject !== null) {
+        this.props.editingProjectDeselect();
       }
     };
 
@@ -51,21 +52,20 @@ export default function PlantEditorContainer(WrappedComponent) {
     };
 
     componentDidMount() {
-      if (this.props.editingPlant !== null) {
-        //TODO: let's check if editingPlant is a legit plant
+      if (this.props.editingProject !== null) {
+        //TODO: let's check if editingProject is a legit project
         const {
-          plantName,
+          projectName,
           description,
           percentTime,
-          inGarden
-        } = this.props.editingPlant;
-        this.setState({ plantName, description, percentTime, inGarden });
+          inProgress
+        } = this.props.editingProject;
+        this.setState({ projectName, description, percentTime, inProgress });
       }
     }
 
     render() {
       return (
-        //TODO: is there a smarter way to pass functions from HOC containers?
         <div>
           <WrappedComponent
             {...this.state}
