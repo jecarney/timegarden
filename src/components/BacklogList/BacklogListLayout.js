@@ -2,11 +2,11 @@ import React from "react";
 import backloglistStyle from "./BacklogListStyles.js";
 
 const BacklogListLayout = props => {
-  const { children, projectEditorOpen } = props;
+  const { children, componentShow } = props;
   return (
     <div style={backloglistStyle.background}>
       <p>Hi! I'm the BacklogList.</p>
-      <button onClick={() => projectEditorOpen()}>New Project</button>
+      <button onClick={() => componentShow("projectEditorActive", true)}>New Project</button>
       {children}
     </div>
   );

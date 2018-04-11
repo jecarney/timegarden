@@ -17,8 +17,8 @@ class AppContainer extends Component {
     todaysDate: moment() //TODO: is this ok?
       .format("YYYYMMDD")
       .toString(),
-    todayFreeHours: 0,
-    todayFreeHoursUnspent: 0,
+    todayFreeMins: 0,
+    todayFreeMinsUnspent: 0,
     todaysProjects: []
   };
 
@@ -44,7 +44,7 @@ class AppContainer extends Component {
       this.state.projects.find(project => project._id === _id)
     );
     this.setState({ editingProject });
-    this.projectEditorOpen();
+    this.componentShow("projectEditorActive", true);
   };
 
   editingProjectDeselect = () => {
@@ -57,7 +57,7 @@ class AppContainer extends Component {
     });
   };
 
-  projectEditorOpen = () => {
+  componentShow = () => {
     this.setState({ projectEditorActive: true });
   };
 
@@ -82,10 +82,10 @@ class AppContainer extends Component {
     this.snapShotGet();
   };
 
-  sliderChange = (name, id, attribute, e, value) => {
+  sliderDragStop = (name, id, attribute, e, value) => {
     // is there a more generic way to handle two-way binding of array of objects?
     if (name === "todaysProjects") {
-      const { todayFreeHours, todaysProjects } = this.state;
+      const { todayFreeMins, todaysProjects } = this.state;
       const updatedProjectSnapShotIndex = todaysProjects.findIndex(
         project => project._id === id
       );
@@ -101,7 +101,7 @@ class AppContainer extends Component {
         [name]: value
       });
     }
-    this.todayFreeHoursUnspentUpdate();
+    this.todayFreeMinsUnspentUpdate();
   };
 
   //TODO: need to get snapShots completely from db... this is simply a list of all snapShots for display... should essentially be read-only
@@ -116,7 +116,7 @@ class AppContainer extends Component {
         if (todaySnapShot) {
           this.setState({
             snapShots: snapShots,
-            todayFreeHours: todaySnapShot.todayFreeHours,
+            todayFreeMins: todaySnapShot.todayFreeMins,
             todaysProjects: todaySnapShot.todaysProjects
           });
         } else {
@@ -144,8 +144,8 @@ class AppContainer extends Component {
   //   todaysDate: moment() //TODO: is this ok?
   //     .format("YYYYMMDD")
   //     .toString(),
-  //   todayFreeHours: 0,
-  //   todayFreeHoursUnspent: 0,
+  //   todayFreeMins: 0,
+  //   todayFreeMinsUnspent: 0,
   //   todaysProjects: []
   // };
 
@@ -165,16 +165,16 @@ class AppContainer extends Component {
     axios.post("/snapShot", { todaysDate, todaysProjects }).then(this.refresh);
   };
 
-  todayFreeHoursUnspentUpdate = () => {
-    const { todayFreeHours, todaysProjects } = this.state;
+  todayFreeMinsUnspentUpdate = () => {
+    const { todayFreeMins, todaysProjects } = this.state;
     console.log(todaysProjects);
-    const todayFreeHoursUsed = todaysProjects.reduce((acc, curr) => {
+    const todayFreeMinsUsed = todaysProjects.reduce((acc, curr) => {
       acc.absoluteEffortMins + curr.absoluteEffortMins;
     }, 0);
-    console.log(todayFreeHoursUsed);
-    const todayFreeHoursUnspent = todayFreeHours - todayFreeHoursUsed;
+    console.log(todayFreeMinsUsed);
+    const todayFreeMinsUnspent = todayFreeMins - todayFreeMinsUsed;
     this.setState({
-      todayFreeHoursUnspent: todayFreeHoursUnspent
+      todayFreeMinsUnspent: todayFreeMinsUnspent
     });
   };
 
@@ -203,9 +203,9 @@ class AppContainer extends Component {
           editingProjectSelect={this.editingProjectSelect}
           logClose={this.logClose}
           projectEditorClose={this.projectEditorClose}
-          projectEditorOpen={this.projectEditorOpen}
+          componentShow={this.componentShow}
           refresh={this.refresh}
-          sliderChange={this.sliderChange}
+          sliderDragStop={this.sliderDragStop}
         />
       </MuiThemeProvider>
     );

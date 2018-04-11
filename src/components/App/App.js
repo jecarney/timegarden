@@ -1,4 +1,5 @@
 import React from "react";
+import RaisedButton from "material-ui/RaisedButton";
 
 import CurrentProjectsContainer from "../CurrentProjects/CurrentProjectsContainer";
 import Log from "../Log/Log";
@@ -8,27 +9,36 @@ import BacklogListLayout from "../BacklogList/BacklogListLayout";
 
 const App = props => {
   const {
-    erase,
+    backlogListActive,
+    componentShow,
     editingProject,
     editingProjectDeselect,
     editingProjectSelect,
+    erase,
     logActive,
-    logClose,
     projectEditorActive,
-    projectEditorOpen,
     projectEditorClose,
     projects,
     refresh,
-    backlogListActive,
     sliderChange,
+    sliderChangeValue,
+    sliderDragStop,
     snapShotUpdate,
-    todayFreeHours,
-    todaysProjects
+    todayFreeMins
   } = props;
 
-  if (projectEditorActive) {
-    return (
-      <div className="App">
+  return (
+    <div className="App">
+      <h1>TimeGarden</h1>
+      <RaisedButton
+        label="Seed List"
+        onClick={() => componentShow("backlogListActive", true)}
+      />
+      <RaisedButton
+        label="Today's Log"
+        onClick={() => componentShow("logActive", true)}
+      />
+      {projectEditorActive && (
         <ProjectEditor
           editingProject={editingProject}
           editingProjectDeselect={editingProjectDeselect}
@@ -36,15 +46,9 @@ const App = props => {
           refresh={refresh}
           snapShotUpdate={snapShotUpdate}
         />
-      </div>
-    );
-  } else if (backlogListActive) {
-    return (
-      <div className="App">
-        <BacklogListLayout
-          projectEditorOpen={projectEditorOpen}
-          projects={projects}
-        >
+      )}
+      {backlogListActive && (
+        <BacklogListLayout componentShow={componentShow} projects={projects}>
           <ul>
             {projects.map((project, i) => (
               <li key={project._id}>
@@ -57,38 +61,52 @@ const App = props => {
             ))}
           </ul>
         </BacklogListLayout>
-      </div>
-    );
-  } else {
-    return (
-      <div className="App">
-        <h1>TimeCurrentProjects</h1>
-        {
-          //   logActive ? (
-          //   <div>
-          //     <Log
-          //       logClose={logClose}
-          //       projects={projects}
-          //       sliderChange={sliderChange}
-          //       todayFreeHours={todayFreeHours}
-          //     />
-          //     <CurrentProjectsContainer
-          //       projects={projects}
-          //       refresh={refresh}
-          //       editingProject={editingProject}
-          //     />
-          //   </div>
-          // ) : (
-          <CurrentProjectsContainer
+      )}
+      {logActive && (
+        <div>
+          <Log
+            componentShow={componentShow}
             projects={projects}
-            refresh={refresh}
-            editingProject={editingProject}
+            sliderChange={sliderChange}
+            sliderChangeValue={sliderChangeValue}
+            sliderDragStop={sliderDragStop}
+            todayFreeMins={todayFreeMins}
           />
-          // )
-        }
+        </div>
+      )}
+      <CurrentProjectsContainer
+        projects={projects}
+        refresh={refresh}
+        editingProject={editingProject}
+      />
+      <div>
+        <ul>
+          <li>
+            <div>
+              Icons made by{" "}
+              <a
+                href="https://www.flaticon.com/authors/turkkub"
+                title="turkkub"
+              >
+                turkkub
+              </a>{" "}
+              from{" "}
+              <a href="https://www.flaticon.com/" title="Flaticon">
+                www.flaticon.com
+              </a>{" "}
+              is licensed by{" "}
+              <a
+                href="http://creativecommons.org/licenses/by/3.0/"
+                title="Creative Commons BY 3.0"
+              >
+                CC 3.0 BY
+              </a>
+            </div>
+          </li>
+        </ul>
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default App;

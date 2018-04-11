@@ -1,6 +1,9 @@
 const projectEditorStyle = {
   background: {
     backgroundColor: "grey"
+  },
+  formButton: {
+    margin: 12
   }
 };
 

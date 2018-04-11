@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
 import moment from "moment";
-import update from "immutability-helper";
 
 import App from "./App";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -9,12 +8,20 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
 class AppContainer extends Component {
   state = {
+    backlogListActive: false,
     editingProject: null,
     logActive: true,
     projectEditorActive: false,
     projects: [],
-    backlogListActive: false,
-    todaysDate: null
+    sliderChangeValue: 0, //TODO: try to scope this to Log.js
+    todaysDate: null,
+    todayFreeMins: 0
+  };
+
+  componentShow = (flag, onOff) => {
+    this.setState({
+      [flag]: onOff
+    });
   };
 
   erase = _id => {
@@ -28,28 +35,11 @@ class AppContainer extends Component {
       this.state.projects.find(project => project._id === _id)
     );
     this.setState({ editingProject });
-    this.projectEditorOpen();
+    this.componentShow("projectEditorActive", true);
   };
 
   editingProjectDeselect = () => {
     this.setState({ editingProject: null });
-  };
-
-  logClose = () => {
-    this.setState({
-      logActive: false
-    });
-  };
-
-  projectEditorOpen = () => {
-    this.setState({ projectEditorActive: true });
-  };
-
-  projectEditorClose = () => {
-    this.setState({
-      projectEditorActive: false,
-      editingProject: null
-    });
   };
 
   projectsGet = () => {
@@ -70,15 +60,36 @@ class AppContainer extends Component {
     this.setState({ todaysDate });
   };
 
+  //TODO: try to scope this to Log.js
+  sliderChange = (e, value) => {
+    this.setState({
+      sliderChangeValue: value
+    });
+  };
+
+  sliderDragStop = (stateReference, value, e) => {
+    // console.log("sliderDragStop");
+    // console.log("e");
+    // console.log(e);
+    console.log("value");
+    console.log(value);
+    console.log("stateReference");
+    console.log(stateReference);
+    this.setState({
+      [stateReference]: value
+    });
+    this.snapShotUpdate();
+  };
+
   snapShotGet = () => {
     //loop through all projects in currentProjects assigning them the values from snapShot.
     //if there's no matching id in snapshots, assign the projects default 0s for those values.
     const { projects, todaysDate } = this.state;
     axios.get(`/snapShot/${todaysDate}`).then(res => {
       const { payload } = res.data;
-      const todaysProjects = [];
+      let todaysProjects = [];
       if (payload) {
-        const todaysProjects = payload;
+        todaysProjects = payload;
       }
       const newProjects = projects.map((project, i) => {
         //if todaysProjects at the given id is missing, assign default 0s
@@ -99,14 +110,18 @@ class AppContainer extends Component {
   };
 
   snapShotUpdate = () => {
-    const { projects, todaysDate } = this.state;
-    const newSnapShot = projects.map((project, i) => {
+    console.log("snapShotUpdate called");
+    const { projects, todaysDate, todayFreeMins } = this.state;
+    const todaysProjects = projects.map((project, i) => {
       return {
         _id: project._id,
         absoluteEffortMins: project.absoluteEffortMins,
         proportionalEffortMins: project.proportionalEffortMins
       };
     });
+    const newSnapShot = { todayFreeMins, todaysProjects };
+    console.log("newSnapShot");
+    console.log(newSnapShot);
     axios.post(`/snapShot/${todaysDate}`, newSnapShot).then(this.refresh());
   };
 
@@ -119,14 +134,13 @@ class AppContainer extends Component {
       <MuiThemeProvider>
         <App
           {...this.state}
+          componentShow={this.componentShow}
           erase={this.erase}
           editingProjectDeselect={this.editingProjectDeselect}
           editingProjectSelect={this.editingProjectSelect}
-          logClose={this.logClose}
-          projectEditorClose={this.projectEditorClose}
-          projectEditorOpen={this.projectEditorOpen}
           refresh={this.refresh}
           sliderChange={this.sliderChange}
+          sliderDragStop={this.sliderDragStop}
           snapShotUpdate={this.snapShotUpdate}
         />
       </MuiThemeProvider>
