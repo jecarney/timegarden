@@ -40,6 +40,7 @@ const App = props => {
       />
       {projectEditorActive && (
         <ProjectEditor
+          componentShow={componentShow}
           editingProject={editingProject}
           editingProjectDeselect={editingProjectDeselect}
           projectEditorClose={projectEditorClose}

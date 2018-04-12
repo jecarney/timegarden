@@ -8,17 +8,19 @@ import projectEditorStyle from "./ProjectEditorStyles";
 
 const ProjectEditor = props => {
   const {
+    componentShow,
     description,
     handleChange,
     handleSubmit,
     inProgress,
     percentTime,
-    projectEditorClose,
     projectName
   } = props;
   return (
     <div>
-      <button onClick={projectEditorClose}>Close Editor</button>
+      <button onClick={() => componentShow("projectEditorActive", false)}>
+        Close Editor
+      </button>
       <form onSubmit={handleSubmit} style={projectEditorStyle.background}>
         <h2>Project Editor</h2>
         <div>
@@ -41,7 +43,7 @@ const ProjectEditor = props => {
         <div>
           <Checkbox
             name="inProgress"
-            label="Project it?"
+            label="Plant it?"
             checked={inProgress}
             onClick={handleChange}
           />

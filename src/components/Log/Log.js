@@ -32,27 +32,30 @@ const Log = props => {
       />
       <p>{todayFreeMins}</p>
       {projects.map((project, i) => {
-        const stateProjectEffortMins =
-          project[project._id]["absoluteEffortMins"];
-        return (
-          <div>
-            <Slider
-              disabled={todayFreeMins === 0}
-              key={project._id}
-              min={0}
-              max={todayFreeMins || 1}
-              onChange={() => sliderChange}
-              onDragStop={sliderDragStop.bind(
-                null,
-                stateProjectEffortMins,
-                sliderChangeValue
-              )}
-              step={0.25}
-              value={stateProjectEffortMins}
-            />
-            <p>{stateProjectEffortMins}</p>
-          </div>
-        );
+        console.log(project);
+        if (project.inProgress) {
+          const stateProjectEffortMins =
+            project[project._id]["absoluteEffortMins"];
+          return (
+            <div>
+              <Slider
+                disabled={todayFreeMins === 0}
+                key={project._id}
+                min={0}
+                max={todayFreeMins || 1}
+                onChange={() => sliderChange}
+                onDragStop={sliderDragStop.bind(
+                  null,
+                  stateProjectEffortMins,
+                  sliderChangeValue
+                )}
+                step={0.25}
+                value={stateProjectEffortMins}
+              />
+              <p>{stateProjectEffortMins}</p>
+            </div>
+          );
+        }
       })}
       <RaisedButton
         label="Close"

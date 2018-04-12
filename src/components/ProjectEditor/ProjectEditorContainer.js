@@ -41,7 +41,7 @@ export default function ProjectEditorContainer(WrappedComponent) {
       const { snapShotUpdate } = this.props;
       snapShotUpdate(); //TODO: snapShotUpdate calls refresh, but would prefer to be more explicit
       this.reinit();
-      this.props.projectEditorClose();
+      this.props.componentShow("projectEditorActive", false);
       if (this.props.editingProject !== null) {
         this.props.editingProjectDeselect();
       }

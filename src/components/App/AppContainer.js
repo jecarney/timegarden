@@ -68,13 +68,6 @@ class AppContainer extends Component {
   };
 
   sliderDragStop = (stateReference, value, e) => {
-    // console.log("sliderDragStop");
-    // console.log("e");
-    // console.log(e);
-    console.log("value");
-    console.log(value);
-    console.log("stateReference");
-    console.log(stateReference);
     this.setState({
       [stateReference]: value
     });
@@ -82,47 +75,58 @@ class AppContainer extends Component {
   };
 
   snapShotGet = () => {
+    //TODO: clean up
     //loop through all projects in currentProjects assigning them the values from snapShot.
     //if there's no matching id in snapshots, assign the projects default 0s for those values.
     const { projects, todaysDate } = this.state;
     axios.get(`/snapShot/${todaysDate}`).then(res => {
       const { payload } = res.data;
-      let todaysProjects = [];
       if (payload) {
-        todaysProjects = payload;
-      }
-      const newProjects = projects.map((project, i) => {
-        //if todaysProjects at the given id is missing, assign default 0s
-        const snapShotProject = todaysProjects[project._id] || {
-          absoluteEffortMins: 0,
-          proportionalEffortMins: 0
-        };
-        return {
-          ...project,
-          ...{
-            absoluteEffortMins: snapShotProject.absoluteEffortMins,
-            proportionalEffortMins: snapShotProject.proportionalEffortMins
+        const { todayFreeMins } = payload;
+        const newProjects = projects.map((project, i) => {
+          if (project.inProgress) {
+            //if todaysProjects at the given id is missing, assign default 0s
+            const updatedSnapShot = payload.todaysProjects[project._id] || {
+              absoluteEffortMins: 0,
+              proportionalEffortMins: 0
+            };
+            return {
+              ...project,
+              ...{
+                absoluteEffortMins: updatedSnapShot.absoluteEffortMins,
+                proportionalEffortMins: updatedSnapShot.proportionalEffortMins
+              }
+            }; //shallow clone of project, needs to be udpated if project structure gets nested
+          } else {
+            return { ...project };
           }
-        }; //shallow clone of project, needs to be udpated if project structure gets nested
-      });
-      this.setState({ projects: newProjects });
+        });
+        this.setState({ todayFreeMins, projects: newProjects });
+      }
     });
   };
 
   snapShotUpdate = () => {
-    console.log("snapShotUpdate called");
+    console.log("snapshotupdate");
     const { projects, todaysDate, todayFreeMins } = this.state;
-    const todaysProjects = projects.map((project, i) => {
-      return {
-        _id: project._id,
-        absoluteEffortMins: project.absoluteEffortMins,
-        proportionalEffortMins: project.proportionalEffortMins
-      };
-    });
-    const newSnapShot = { todayFreeMins, todaysProjects };
+    console.log("projects in snapshot update");
+    console.log(projects);
+    const todaysProjects = projects.reduce((filtered, project) => {
+      console.log("project in snapshot update");
+      console.log(project);
+      if (project.inProgress) {
+        filtered.push({
+          _id: project._id,
+          absoluteEffortMins: project.absoluteEffortMins,
+          proportionalEffortMins: project.proportionalEffortMins
+        });
+      }
+      return filtered;
+    }, []);
+    const newSnapShot = { todaysDate, todayFreeMins, todaysProjects };
     console.log("newSnapShot");
     console.log(newSnapShot);
-    axios.post(`/snapShot/${todaysDate}`, newSnapShot).then(this.refresh());
+    axios.post("/snapShot", newSnapShot).then(this.refresh());
   };
 
   componentDidMount() {

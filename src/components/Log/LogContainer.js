@@ -14,10 +14,6 @@ export default function LogContainer(WrappedComponent) {
       });
     };
 
-    // reinit = () => {
-    //   this.setState(INITIAL_STATE);
-    // };
-
     render() {
       return (
         <div>

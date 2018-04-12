@@ -1,4 +1,6 @@
 import React from "react";
+import RaisedButton from "material-ui/RaisedButton";
+
 import backloglistStyle from "./BacklogListStyles.js";
 
 const BacklogListLayout = props => {
@@ -6,7 +8,10 @@ const BacklogListLayout = props => {
   return (
     <div style={backloglistStyle.background}>
       <p>Hi! I'm the BacklogList.</p>
-      <button onClick={() => componentShow("projectEditorActive", true)}>New Project</button>
+      <RaisedButton
+        label="New Project"
+        onClick={() => componentShow("projectEditorActive", true)}
+      />
       {children}
     </div>
   );
