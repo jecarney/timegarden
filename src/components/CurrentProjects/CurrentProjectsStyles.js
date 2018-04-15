@@ -1,7 +1,6 @@
 const currentProjectsStyle = {
   background: {
-    backgroundColor: "green",
-    height: "50%"
+    height: "100%"
   }
 };
 

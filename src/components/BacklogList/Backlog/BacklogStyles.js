@@ -1,6 +1,8 @@
 const BacklogStyle = {
   background: {
-    backgroundColor: "yellow"
+    backgroundColor: "#ffffa16b",
+    border: "solid 2px yellowgreen",
+    margin: "5px"
   }
 };
 

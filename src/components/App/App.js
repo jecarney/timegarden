@@ -1,7 +1,9 @@
 import React from "react";
 import RaisedButton from "material-ui/RaisedButton";
 
-import CurrentProjectsContainer from "../CurrentProjects/CurrentProjectsContainer";
+import "../tempStyles.css";
+
+import CurrentProjects from "../CurrentProjects/CurrentProjects";
 import Log from "../Log/Log";
 import ProjectEditor from "../ProjectEditor/ProjectEditor";
 import Backlog from "../BacklogList/Backlog/Backlog";
@@ -11,10 +13,12 @@ const App = props => {
   const {
     backlogListActive,
     componentShow,
+    currentPercentEffort,
     editingProject,
     editingProjectDeselect,
     editingProjectSelect,
     erase,
+    freeMinsGlobal,
     logActive,
     projectEditorActive,
     projectEditorClose,
@@ -23,88 +27,98 @@ const App = props => {
     sliderChange,
     sliderChangeValue,
     sliderDragStop,
-    snapShotUpdate,
-    todayFreeMins
+    snapShots
   } = props;
 
+  const getSkyImg = () => {
+    if (currentPercentEffort > 0.75) {
+      return "rainbow";
+    } else if (currentPercentEffort > 0.5) {
+      return "sun";
+    } else if (currentPercentEffort > 0.25) {
+      return "rain";
+    } else {
+      return "cloudy";
+    }
+  };
+  const skyImg = 'url("/' + getSkyImg() + '.jpg")';
+  console.log(skyImg);
   return (
     <div className="App">
-      <h1>TimeGarden</h1>
-      <RaisedButton
-        label="Seed List"
-        onClick={() => componentShow("backlogListActive", true)}
-      />
-      <RaisedButton
-        label="Today's Log"
-        onClick={() => componentShow("logActive", true)}
-      />
-      {projectEditorActive && (
-        <ProjectEditor
-          componentShow={componentShow}
-          editingProject={editingProject}
-          editingProjectDeselect={editingProjectDeselect}
-          projectEditorClose={projectEditorClose}
-          refresh={refresh}
-          snapShotUpdate={snapShotUpdate}
-        />
-      )}
-      {backlogListActive && (
-        <BacklogListLayout componentShow={componentShow} projects={projects}>
-          <ul>
-            {projects.map((project, i) => (
-              <li key={project._id}>
+      <header
+        style={{
+          backgroundImage: skyImg,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "100% "
+        }}
+      >
+        <h1>TimeGarden</h1>
+        <div>
+          <RaisedButton
+            style={{ margin: "5px" }}
+            label="Seed List"
+            onClick={() => componentShow("backlogListActive", true)}
+          />
+          <RaisedButton
+            style={{ margin: "5px" }}
+            label="Today's Log"
+            onClick={() => componentShow("logActive", true)}
+          />
+        </div>
+      </header>
+      <div
+        className="screenHolder"
+        style={{ backgroundImage: 'url("/grass.jpg")' }}
+      >
+        {projectEditorActive && (
+          <div className="page projectEditor">
+            <ProjectEditor
+              componentShow={componentShow}
+              editingProject={editingProject}
+              editingProjectDeselect={editingProjectDeselect}
+              projectEditorClose={projectEditorClose}
+              refresh={refresh}
+            />
+          </div>
+        )}
+        {backlogListActive && (
+          <div className="page backLogList">
+            <BacklogListLayout
+              componentShow={componentShow}
+              projects={projects}
+            >
+              {projects.map((project, i) => (
                 <Backlog
                   {...project}
                   editingProjectSelect={editingProjectSelect}
                   erase={erase}
+                  key={project._id}
                 />
-              </li>
-            ))}
-          </ul>
-        </BacklogListLayout>
-      )}
-      {logActive && (
-        <div>
-          <Log
-            componentShow={componentShow}
+              ))}
+            </BacklogListLayout>
+          </div>
+        )}
+        {logActive && (
+          <div className="page log">
+            <Log
+              componentShow={componentShow}
+              freeMinsGlobal={freeMinsGlobal}
+              projects={projects}
+              refresh={refresh}
+              sliderChange={sliderChange}
+              sliderChangeValue={sliderChangeValue}
+              sliderDragStop={sliderDragStop}
+            />
+          </div>
+        )}
+        <div className="page currentProjects">
+          <CurrentProjects
+            editingProject={editingProject}
             projects={projects}
-            sliderChange={sliderChange}
-            sliderChangeValue={sliderChangeValue}
-            sliderDragStop={sliderDragStop}
-            todayFreeMins={todayFreeMins}
+            refresh={refresh}
+            snapShots={snapShots}
           />
         </div>
-      )}
-      <CurrentProjectsContainer
-        projects={projects}
-        refresh={refresh}
-        editingProject={editingProject}
-      />
-      <div>
-        <ul>
-          <li>
-            <div>
-              Icons made by{" "}
-              <a
-                href="https://www.flaticon.com/authors/turkkub"
-                title="turkkub"
-              >
-                turkkub
-              </a>{" "}
-              from{" "}
-              <a href="https://www.flaticon.com/" title="Flaticon">
-                www.flaticon.com
-              </a>{" "}
-              is licensed by{" "}
-              <a
-                href="http://creativecommons.org/licenses/by/3.0/"
-                title="Creative Commons BY 3.0"
-              >
-                CC 3.0 BY
-              </a>
-            </div>
-          </li>
-        </ul>
       </div>
     </div>
   );

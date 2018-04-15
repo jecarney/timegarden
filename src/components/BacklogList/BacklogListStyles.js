@@ -1,7 +1,7 @@
 const backlogListStyle = {
   background: {
-    backgroundColor: "brown",
-    height: "50%"
+    backgroundColor: "#4caf50",
+    height: "100%"
   }
 };
 

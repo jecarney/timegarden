@@ -5,7 +5,7 @@ export default function ProjectEditorContainer(WrappedComponent) {
   const INITIAL_STATE = {
     description: "",
     inProgress: false,
-    percentTime: 0,
+    goalProportionEffort: 0,
     projectName: ""
   };
 
@@ -21,25 +21,32 @@ export default function ProjectEditorContainer(WrappedComponent) {
     };
 
     handleSubmit = e => {
-      e.preventDefault();
-      const { projectName, description, percentTime, inProgress } = this.state;
+      // e.preventDefault();
+      const {
+        projectName,
+        description,
+        goalProportionEffort,
+        inProgress
+      } = this.state;
       const { editingProject } = this.props;
       const newAttributes = Object.assign(
         {},
-        { projectName, description, percentTime, inProgress }
+        { projectName, description, goalProportionEffort, inProgress }
       );
 
       if (editingProject !== null) {
         newAttributes["_id"] = editingProject._id;
-        axios.put("/project", newAttributes).then(this.handleSubmitSuccess);
+        axios
+          .put("/project/project_edit", newAttributes)
+          .then(this.handleSubmitSuccess);
       } else {
         axios.post("/project", newAttributes).then(this.handleSubmitSuccess);
       }
     };
 
     handleSubmitSuccess = () => {
-      const { snapShotUpdate } = this.props;
-      snapShotUpdate(); //TODO: snapShotUpdate calls refresh, but would prefer to be more explicit
+      const { refresh } = this.props;
+      refresh();
       this.reinit();
       this.props.componentShow("projectEditorActive", false);
       if (this.props.editingProject !== null) {
@@ -57,18 +64,25 @@ export default function ProjectEditorContainer(WrappedComponent) {
         const {
           projectName,
           description,
-          percentTime,
+          goalProportionEffort,
           inProgress
         } = this.props.editingProject;
-        this.setState({ projectName, description, percentTime, inProgress });
+        this.setState({
+          projectName,
+          description,
+          goalProportionEffort,
+          inProgress
+        });
       }
     }
 
     render() {
+      //TODO: do I need to pass props through? shouldn't, but wasn't getting them in wrappedcomponents
       return (
         <div>
           <WrappedComponent
             {...this.state}
+            {...this.props}
             handleChange={this.handleChange}
             handleSubmit={this.handleSubmit}
             handleSubmitSuccess={this.handleSubmitSuccess}

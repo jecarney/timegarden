@@ -9,18 +9,28 @@ import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 class AppContainer extends Component {
   state = {
     backlogListActive: false,
+    currentPercentEffort: 0,
     editingProject: null,
-    logActive: true,
+    freeMinsGlobal: 0,
+    logActive: false,
     projectEditorActive: false,
     projects: [],
-    sliderChangeValue: 0, //TODO: try to scope this to Log.js
-    todaysDate: null,
-    todayFreeMins: 0
+    snapShots: [],
+    todaysDate: null
   };
 
   componentShow = (flag, onOff) => {
     this.setState({
       [flag]: onOff
+    });
+  };
+
+  currentLogGet = () => {
+    axios.get("/currentLog").then(res => {
+      const { payload } = res.data;
+      if (payload) {
+        this.setState({ freeMinsGlobal: payload.freeMins });
+      }
     });
   };
 
@@ -47,90 +57,47 @@ class AppContainer extends Component {
       const { payload } = res.data;
       if (payload) {
         this.setState({ projects: payload });
-        this.snapShotGet();
       }
     });
   };
 
   refresh = () => {
+    console.log("refresh");
+    this.currentLogGet();
     this.projectsGet();
-    const todaysDate = moment()
-      .format("YYYYMMDD")
-      .toString();
-    this.setState({ todaysDate });
+    this.snapShotGet();
   };
 
-  //TODO: try to scope this to Log.js
-  sliderChange = (e, value) => {
+  setSky = () => {
+    const { freeMinsGlobal, projects } = this.state;
+    const sumEffortMins = projects.reduce(
+      (total, project) => total + project.absoluteEffortMins,
+      0
+    );
     this.setState({
-      sliderChangeValue: value
+      currentPercentEffort: sumEffortMins / freeMinsGlobal || 0
     });
   };
 
-  sliderDragStop = (stateReference, value, e) => {
-    this.setState({
-      [stateReference]: value
-    });
-    this.snapShotUpdate();
+  snapShotDailyRefresh = todaysDate => {
+    axios.get(`/snapShot/dailyRefresh/${todaysDate}`).then(this.refresh);
   };
 
   snapShotGet = () => {
-    //TODO: clean up
-    //loop through all projects in currentProjects assigning them the values from snapShot.
-    //if there's no matching id in snapshots, assign the projects default 0s for those values.
-    const { projects, todaysDate } = this.state;
+    const { todaysDate } = this.state;
     axios.get(`/snapShot/${todaysDate}`).then(res => {
       const { payload } = res.data;
       if (payload) {
-        const { todayFreeMins } = payload;
-        const newProjects = projects.map((project, i) => {
-          if (project.inProgress) {
-            //if todaysProjects at the given id is missing, assign default 0s
-            const updatedSnapShot = payload.todaysProjects[project._id] || {
-              absoluteEffortMins: 0,
-              proportionalEffortMins: 0
-            };
-            return {
-              ...project,
-              ...{
-                absoluteEffortMins: updatedSnapShot.absoluteEffortMins,
-                proportionalEffortMins: updatedSnapShot.proportionalEffortMins
-              }
-            }; //shallow clone of project, needs to be udpated if project structure gets nested
-          } else {
-            return { ...project };
-          }
-        });
-        this.setState({ todayFreeMins, projects: newProjects });
+        this.setState({ snapShots: payload });
       }
+      this.setSky();
     });
   };
 
-  snapShotUpdate = () => {
-    console.log("snapshotupdate");
-    const { projects, todaysDate, todayFreeMins } = this.state;
-    console.log("projects in snapshot update");
-    console.log(projects);
-    const todaysProjects = projects.reduce((filtered, project) => {
-      console.log("project in snapshot update");
-      console.log(project);
-      if (project.inProgress) {
-        filtered.push({
-          _id: project._id,
-          absoluteEffortMins: project.absoluteEffortMins,
-          proportionalEffortMins: project.proportionalEffortMins
-        });
-      }
-      return filtered;
-    }, []);
-    const newSnapShot = { todaysDate, todayFreeMins, todaysProjects };
-    console.log("newSnapShot");
-    console.log(newSnapShot);
-    axios.post("/snapShot", newSnapShot).then(this.refresh());
-  };
-
   componentDidMount() {
-    this.refresh();
+    const todaysDate = parseInt(moment().format("YYYYMMDD"));
+    this.setState({ todaysDate });
+    this.snapShotDailyRefresh(todaysDate);
   }
 
   render() {
@@ -145,7 +112,6 @@ class AppContainer extends Component {
           refresh={this.refresh}
           sliderChange={this.sliderChange}
           sliderDragStop={this.sliderDragStop}
-          snapShotUpdate={this.snapShotUpdate}
         />
       </MuiThemeProvider>
     );

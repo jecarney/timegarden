@@ -1,4 +1,5 @@
 import React from "react";
+import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
 import Checkbox from "material-ui/Checkbox";
 
@@ -10,55 +11,58 @@ const ProjectEditor = props => {
   const {
     componentShow,
     description,
+    goalProportionEffort,
     handleChange,
     handleSubmit,
     inProgress,
-    percentTime,
     projectName
   } = props;
   return (
-    <div>
-      <button onClick={() => componentShow("projectEditorActive", false)}>
-        Close Editor
-      </button>
-      <form onSubmit={handleSubmit} style={projectEditorStyle.background}>
-        <h2>Project Editor</h2>
-        <div>
-          <TextField
-            name="projectName"
-            type="text"
-            placeholder="Enter the project name"
-            value={projectName}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <TextField
-            name="description"
-            placeholder="Enter the post description"
-            value={description}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <Checkbox
-            name="inProgress"
-            label="Plant it?"
-            checked={inProgress}
-            onClick={handleChange}
-          />
-        </div>
-        <div>
-          <TextField
-            name="percentTime"
-            type="text"
-            placeholder="Enter the percentage of your free time you'd like to work on this project"
-            value={percentTime}
-            onChange={handleChange}
-          />
-        </div>
-        <input type="submit" value="Add Post" />
-      </form>
+    <div style={projectEditorStyle.background}>
+      <RaisedButton
+        style={{ margin: "5px" }}
+        label="Save"
+        onClick={handleSubmit}
+      />
+      <RaisedButton
+        style={{ margin: "5px" }}
+        label="Close"
+        onClick={() => componentShow("projectEditorActive", false)}
+      />
+      <div>
+        <TextField
+          name="projectName"
+          type="text"
+          placeholder="Enter the project name"
+          value={projectName}
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+        <TextField
+          name="description"
+          placeholder="Enter the post description"
+          value={description}
+          onChange={handleChange}
+        />
+      </div>
+      <div>
+        <Checkbox
+          name="inProgress"
+          label="Plant it?"
+          checked={inProgress}
+          onClick={handleChange}
+        />
+      </div>
+      <div>
+        <TextField
+          name="goalProportionEffort"
+          type="text"
+          placeholder="Enter the percentage of your free time you'd like to work on this project"
+          value={goalProportionEffort}
+          onChange={handleChange}
+        />
+      </div>
     </div>
   );
 };

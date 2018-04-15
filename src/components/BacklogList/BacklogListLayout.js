@@ -7,10 +7,15 @@ const BacklogListLayout = props => {
   const { children, componentShow } = props;
   return (
     <div style={backloglistStyle.background}>
-      <p>Hi! I'm the BacklogList.</p>
       <RaisedButton
+        style={{ margin: "5px" }}
         label="New Project"
         onClick={() => componentShow("projectEditorActive", true)}
+      />
+      <RaisedButton
+        style={{ margin: "5px" }}
+        label="Close"
+        onClick={() => componentShow("backlogListActive", false)}
       />
       {children}
     </div>

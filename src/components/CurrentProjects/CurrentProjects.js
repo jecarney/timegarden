@@ -2,22 +2,18 @@ import React from "react";
 
 import currentProjectsStyle from "./CurrentProjectsStyles.js";
 
+import CurrentProjectsContainer from "./CurrentProjectsContainer";
 import CurrentProject from "./CurrentProject/CurrentProject.js";
 
 const CurrentProjects = props => {
-  const { projectedProjects } = props;
+  const { currentProjects } = props;
   return (
     <div style={currentProjectsStyle.background}>
-      <p>Hi! I'm the CurrentProjects.</p>
-      <ul>
-        {projectedProjects.map((project, i) => (
-          <li key={project._id}>
-            <CurrentProject {...project} />
-          </li>
-        ))}
-      </ul>
+      {currentProjects.map((project, i) => (
+        <CurrentProject key={project._id} {...project} />
+      ))}
     </div>
   );
 };
 
-export default CurrentProjects;
+export default CurrentProjectsContainer(CurrentProjects);
