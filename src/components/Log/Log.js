@@ -29,7 +29,7 @@ const Log = props => {
 
   return (
     <div style={LogStyle.background}>
-      <h2>CurrentProjects Log</h2>
+      <h2>Garden Log</h2>
       <div
         style={{
           backgroundColor: "rgba(200, 214, 234, 0.42)",
@@ -38,7 +38,8 @@ const Log = props => {
         }}
       >
         <p style={{ margin: "0 10px" }}>
-          {"I had " + freeMinsGlobal + " hours free today."}
+          {`I had ${freeMinsGlobal} hours free today.`}
+          {freeMinsUnspent() === 0 ? " All free time has been logged." : ""}
         </p>
         <Slider
           min={0}
@@ -55,20 +56,14 @@ const Log = props => {
           return (
             <ProjectLog
               freeMinsGlobal={freeMinsGlobal}
-              freeMinsUnspent={freeMinsUnspent()}
               key={project._id}
               project={project}
               refresh={refresh}
+              freeMinsUnspent={freeMinsUnspent}
             />
           );
         }
       })}
-      <RaisedButton
-        style={{ margin: "5px" }}
-        label="Close"
-        onClick={() => componentShow("logActive", false)}
-        style={LogStyle.formButton}
-      />
     </div>
   );
 };

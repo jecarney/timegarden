@@ -4,6 +4,8 @@ import moment from "moment";
 
 import App from "./App";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import { getToken, removeToken } from "../../services/tokenService";
+
 // import RaisedButton from 'material-ui/RaisedButton';
 
 class AppContainer extends Component {
@@ -16,7 +18,8 @@ class AppContainer extends Component {
     projectEditorActive: false,
     projects: [],
     snapShots: [],
-    todaysDate: null
+    todaysDate: null,
+    user: null
   };
 
   componentShow = (flag, onOff) => {
@@ -26,16 +29,26 @@ class AppContainer extends Component {
   };
 
   currentLogGet = () => {
-    axios.get("/currentLog").then(res => {
-      const { payload } = res.data;
-      if (payload) {
-        this.setState({ freeMinsGlobal: payload.freeMins });
-      }
-    });
+    const token = getToken();
+    axios
+      .get("/currentLog", {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => {
+        const { payload } = res.data;
+        if (payload) {
+          this.setState({ freeMinsGlobal: payload.freeMins });
+        }
+      });
   };
 
   erase = _id => {
-    axios.erase(`/project/${_id}`).then(this.refresh);
+    const token = getToken();
+    axios
+      .delete(`/project/${_id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(this.refresh);
   };
 
   editingProjectSelect = _id => {
@@ -52,20 +65,25 @@ class AppContainer extends Component {
     this.setState({ editingProject: null });
   };
 
-  projectsGet = () => {
-    axios.get("/project").then(res => {
-      const { payload } = res.data;
-      if (payload) {
-        this.setState({ projects: payload });
-      }
-    });
+  projectsGet = extraCallBack => {
+    const token = getToken();
+    axios
+      .get("/project", {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => {
+        const { payload } = res.data;
+        if (payload) {
+          this.setState({ projects: payload });
+          extraCallBack();
+        }
+      });
   };
 
   refresh = () => {
-    console.log("refresh");
     this.currentLogGet();
-    this.projectsGet();
-    this.snapShotGet();
+    this.projectsGet(this.snapShotGet);
+    // this.snapShotGet();
   };
 
   setSky = () => {
@@ -79,25 +97,72 @@ class AppContainer extends Component {
     });
   };
 
-  snapShotDailyRefresh = todaysDate => {
-    axios.get(`/snapShot/dailyRefresh/${todaysDate}`).then(this.refresh);
+  userGet = () => {
+    const token = getToken();
+    if (token) {
+      axios
+        .get("/user/current", {
+          // 3. Pass the token as an Authorization Header
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(res => {
+          if (res.status === 200) {
+            const user = res.data.payload;
+            this.userSet(user);
+          }
+        });
+    }
+  };
+
+  userLogout = () => {
+    removeToken();
+    this.userSet(null);
+  };
+
+  userSet = user => {
+    this.setState({ user });
+  };
+
+  snapShotDailyRefresh = () => {
+    // const { todaysDate } = this.state;
+    const todaysDate = parseInt(moment().format("YYYYMMDD"));
+
+    const token = getToken();
+    axios
+      .get(`/snapShot/dailyRefresh/${todaysDate}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(this.refresh);
   };
 
   snapShotGet = () => {
-    const { todaysDate } = this.state;
-    axios.get(`/snapShot/${todaysDate}`).then(res => {
-      const { payload } = res.data;
-      if (payload) {
-        this.setState({ snapShots: payload });
-      }
-      this.setSky();
-    });
+    const token = getToken();
+    const { freeMinsGlobal, projects, todaysDate, user } = this.state;
+    axios
+      .get("/snapShot", {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => {
+        const { payload } = res.data;
+        if (payload) {
+          const snapShots = payload.concat({
+            freeMins: freeMinsGlobal,
+            projects,
+            date: todaysDate,
+            user
+          });
+          this.setState({ snapShots });
+        }
+        this.setSky();
+      });
   };
 
   componentDidMount() {
+    //console.log("componentDidMount");
+    this.userGet();
     const todaysDate = parseInt(moment().format("YYYYMMDD"));
     this.setState({ todaysDate });
-    this.snapShotDailyRefresh(todaysDate);
+    this.snapShotDailyRefresh();
   }
 
   render() {
@@ -112,6 +177,10 @@ class AppContainer extends Component {
           refresh={this.refresh}
           sliderChange={this.sliderChange}
           sliderDragStop={this.sliderDragStop}
+          snapShotDailyRefresh={this.snapShotDailyRefresh}
+          userGet={this.userGet}
+          userLogout={this.userLogout}
+          userSet={this.userSet}
         />
       </MuiThemeProvider>
     );

@@ -12,12 +12,6 @@ const ProjectLog = props => {
     sliderChange,
     sliderDragStop
   } = props;
-  //TODO add guard to stop time spent being more than freeminsunspent
-  // const absoluteEffortMinsLimit = () => {
-  //   return project.absoluteEffortMins <= freeMinsUnspent
-  //     ? project.absoluteEffortMins
-  //     : freeMinsUnspent;
-  // };
 
   return (
     <div
@@ -27,14 +21,17 @@ const ProjectLog = props => {
         margin: "5px"
       }}
     >
-      <p style={{ margin: "0 10px" }}>
+      <p style={{ margin: "0 10px", float: "left" }}>
         {"I spent " +
           project.absoluteEffortMins +
           " hours on " +
           project.projectName}
       </p>
+      <p style={{ margin: "0 10px", float: "right", color: "#d6eff3" }}>
+        {"Goal is " + project.goalProportionEffort * freeMinsGlobal + " hours."}
+      </p>
       <Slider
-        disabled={freeMinsGlobal === 0}
+        disabled={freeMinsUnspent() === 0}
         min={0}
         max={freeMinsGlobal || 1}
         onChange={sliderChange.bind(null, "absoluteEffortMins")}
@@ -50,5 +47,5 @@ export default LogContainer_Shared(
   {
     absoluteEffortMins: 0
   },
-  "/project/project_log"
+  "/project"
 )(ProjectLog);

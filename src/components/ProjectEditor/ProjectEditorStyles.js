@@ -1,7 +1,7 @@
 const projectEditorStyle = {
   background: {
-    backgroundColor: "#9fd6a0",
-    border: "solid 2px #477d49",
+    backgroundColor: "#97d272",
+    border: "solid 2px #cddc39",
     margin: "5px"
   }
 };

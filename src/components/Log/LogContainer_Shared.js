@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { getToken } from "../../services/tokenService";
 
 const LogContainer_Shared = (INITIAL_STATE, route) => WrappedComponent => {
   return class extends React.Component {
@@ -12,13 +13,16 @@ const LogContainer_Shared = (INITIAL_STATE, route) => WrappedComponent => {
     };
 
     sliderDragStop = (stateReference, value, e) => {
-      console.log("dragstop");
-      let update = { [stateReference]: this.state[stateReference] };
+      const token = getToken();
+      const authHeader = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+      let newAttributes = { [stateReference]: this.state[stateReference] };
       //ProjectLog needs to pass id
       if (this.props.project) {
-        update._id = this.props.project._id;
+        newAttributes._id = this.props.project._id;
       }
-      axios.put(route, update).then(this.props.refresh);
+      axios.put(route, newAttributes, authHeader).then(this.props.refresh);
     };
 
     render() {

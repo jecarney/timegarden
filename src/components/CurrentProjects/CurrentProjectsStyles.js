@@ -1,6 +1,7 @@
 const currentProjectsStyle = {
   background: {
-    height: "100%"
+    height: "100%",
+    backgroundImage: 'url("/grass.jpg")'
   }
 };
 

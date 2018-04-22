@@ -4,20 +4,21 @@ import RaisedButton from "material-ui/RaisedButton";
 import backloglistStyle from "./BacklogListStyles.js";
 
 const BacklogListLayout = props => {
-  const { children, componentShow } = props;
+  const { children, componentShow, projectEditorActive } = props;
+  let greyOut = projectEditorActive
+    ? { display: "block" }
+    : { display: "none" };
   return (
     <div style={backloglistStyle.background}>
-      <RaisedButton
-        style={{ margin: "5px" }}
-        label="New Project"
-        onClick={() => componentShow("projectEditorActive", true)}
-      />
-      <RaisedButton
-        style={{ margin: "5px" }}
-        label="Close"
-        onClick={() => componentShow("backlogListActive", false)}
-      />
-      {children}
+      <div>
+        <RaisedButton
+          style={{ margin: "5px" }}
+          label="New"
+          onClick={() => componentShow("projectEditorActive", true)}
+        />
+        {children}
+      </div>
+      <div style={{ ...backloglistStyle.greyOut, ...greyOut }} />
     </div>
   );
 };
