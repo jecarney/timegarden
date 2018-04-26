@@ -145,12 +145,20 @@ class AppContainer extends Component {
       .then(res => {
         const { payload } = res.data;
         if (payload) {
-          const snapShots = payload.concat({
+          // const snapShots = payload.concat({
+          //   freeMins: freeMinsGlobal,
+          //   projects,
+          //   date: todaysDate,
+          //   user
+          // });
+          const snapShots = [ {
             freeMins: freeMinsGlobal,
             projects,
             date: todaysDate,
             user
-          });
+          }, ...payload];
+          // console.log('snapShots in snapShotGet');
+          // console.log(snapShots);
           this.setState({ snapShots });
         }
         this.setSky();

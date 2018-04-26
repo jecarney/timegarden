@@ -24,7 +24,7 @@ db.projects.insert([
     goalProportionEffort: 0.2,
     inProgress: true,
     absoluteEffortMins: 0,
-    progressStart: ISODate("2018-04-20T01:43:58.623Z"),
+    progressStart: ISODate("2018-04-21T01:43:58.623Z"),
     user: ObjectId("5adaa913669ad81c04bd114a")
   },
   {
@@ -34,7 +34,7 @@ db.projects.insert([
     goalProportionEffort: 0.4,
     inProgress: true,
     absoluteEffortMins: 0,
-    progressStart: ISODate("2018-04-15T01:43:58.623Z"),
+    progressStart: ISODate("2018-04-01T01:43:58.623Z"),
     user: ObjectId("5adaa913669ad81c04bd114a")
   },
   {
@@ -44,14 +44,14 @@ db.projects.insert([
     goalProportionEffort: 0.2,
     inProgress: true,
     absoluteEffortMins: 0,
-    progressStart: ISODate("2018-04-01T01:43:58.623Z"),
+    progressStart: ISODate("2018-04-19T01:43:58.623Z"),
     user: ObjectId("5adaa913669ad81c04bd114a")
   }
 ]);
 
 db.snapshots.insert([
   {
-    date: 20180413,
+    date: 20180421,
     freeMins: 120,
     projects: [
       {
@@ -60,7 +60,7 @@ db.snapshots.insert([
       },
       {
         _id: ObjectId("5ad2a10f5ad56a2eb723a2c3"),
-        absoluteEffortMins: 40
+        absoluteEffortMins: 50
       },
       {
         _id: ObjectId("5ad2a1445ad56a2eb723a2c4"),
@@ -79,7 +79,7 @@ db.snapshots.insert([
       },
       {
         _id: ObjectId("5ad2a10f5ad56a2eb723a2c3"),
-        absoluteEffortMins: 30
+        absoluteEffortMins: 50
       },
       {
         _id: ObjectId("5ad2a1445ad56a2eb723a2c4"),
@@ -98,7 +98,7 @@ db.snapshots.insert([
       },
       {
         _id: ObjectId("5ad2a10f5ad56a2eb723a2c3"),
-        absoluteEffortMins: 40
+        absoluteEffortMins: 50
       },
       {
         _id: ObjectId("5ad2a1445ad56a2eb723a2c4"),
@@ -117,7 +117,7 @@ db.snapshots.insert([
       },
       {
         _id: ObjectId("5ad2a10f5ad56a2eb723a2c3"),
-        absoluteEffortMins: 30
+        absoluteEffortMins: 50
       },
       {
         _id: ObjectId("5ad2a1445ad56a2eb723a2c4"),
@@ -136,7 +136,7 @@ db.snapshots.insert([
       },
       {
         _id: ObjectId("5ad2a10f5ad56a2eb723a2c3"),
-        absoluteEffortMins: 30
+        absoluteEffortMins: 50
       },
       {
         _id: ObjectId("5ad2a1445ad56a2eb723a2c4"),
@@ -155,7 +155,7 @@ db.snapshots.insert([
       },
       {
         _id: ObjectId("5ad2a10f5ad56a2eb723a2c3"),
-        absoluteEffortMins: 30
+        absoluteEffortMins: 50
       },
       {
         _id: ObjectId("5ad2a1445ad56a2eb723a2c4"),

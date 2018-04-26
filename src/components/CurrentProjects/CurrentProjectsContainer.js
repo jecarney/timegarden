@@ -70,11 +70,25 @@ export default function CurrentProjectsContainer(WrappedComponent) {
       };
 
       const rewardForWeek = project => {
+        // console.log('project in rewardForWeek');
+        // console.log(project.projectName);
+        // console.log(snapShots);
         return snapShots.slice(0, 7).every(snapShot => {
+
+
+
           const proportionEffort = snapShotProportionByProject(
             snapShot,
             project._id
           );
+          // if(project.projectName==='learning guitar'){
+          //   console.log('snapShot in rewardForWeek');
+          //   console.log(snapShot);
+          //   console.log('proportionEffort');
+          //   console.log(proportionEffort);
+          //   console.log('proportionEffort >= project.goalProportionEffort');
+          //   console.log(proportionEffort >= project.goalProportionEffort);
+          // }
           return proportionEffort >= project.goalProportionEffort;
         });
       };
