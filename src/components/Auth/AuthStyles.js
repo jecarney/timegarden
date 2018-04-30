@@ -3,12 +3,9 @@ const authStyle = {
     backgroundColor: "white",
     margin: "20px"
   },
-  links: {
-    margin: "0 7px",
-    color: "black"
-  },
-  textArea: {
-    color: "black"
+  authText: {
+    color: "#0c7d36",
+    fontSize: "14px"
   }
 };
 

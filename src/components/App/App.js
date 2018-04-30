@@ -8,15 +8,14 @@ import {
 } from "react-router-dom";
 import FlatButton from "material-ui/FlatButton";
 
-import "../tempStyles.css";
 import appStyle from "./AppStyles.js";
 
 import Auth from "../Auth/Auth";
-import Backlog from "../BacklogList/Backlog/Backlog";
 import BacklogListLayout from "../BacklogList/BacklogListLayout";
 import CurrentProjects from "../CurrentProjects/CurrentProjects";
 import Log from "../Log/Log";
 import ProjectEditor from "../ProjectEditor/ProjectEditor";
+import ProtectedRoute from "../Auth/ProtectedRoute";
 
 const App = props => {
   const {
@@ -58,21 +57,19 @@ const App = props => {
   const skyImg = 'url("/' + getSkyImg() + '.jpg")';
   return (
     <Router>
-      <div className="App">
-        <header
-          style={{
-            backgroundImage: skyImg,
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "100% "
-          }}
-        >
-          <h1>TimeGarden</h1>
+      <div style={{ ...appStyle.global, ...appStyle.font }}>
+        <header style={{ ...appStyle.header, ...{ backgroundImage: skyImg } }}>
+          <h1 style={{ ...appStyle.font, ...appStyle.title }}>TimeGarden</h1>
           <div style={appStyle.logout}>
-            <FlatButton label="Logout" onClick={userLogout} />
+            <FlatButton
+              label="Logout"
+              onClick={userLogout}
+              style={appStyle.font}
+            />
           </div>
 
           {user && (
-            <div>
+            <div style={appStyle.linkHolder}>
               <Link to="/" style={appStyle.links}>
                 Garden
               </Link>
@@ -85,120 +82,80 @@ const App = props => {
             </div>
           )}
         </header>
-        <div className="screenHolder" style={appStyle.screenHolder}>
-          {projectEditorActive && (
-            <div className="page projectEditor">
-              <ProjectEditor
-                componentShow={componentShow}
-                editingProject={editingProject}
-                editingProjectDeselect={editingProjectDeselect}
-                projectEditorClose={projectEditorClose}
-                refresh={refresh}
-              />
-            </div>
-          )}
-          <Switch>
-            <Route
-              exact
-              path="/login"
-              render={() => {
-                if (user) {
-                  return <Redirect to="/" />;
-                } else {
-                  return (
-                    <Auth
-                      route={"login"}
-                      snapShotDailyRefresh={snapShotDailyRefresh}
-                      userSet={userSet}
-                      userGet={userGet}
-                    />
-                  );
-                }
-              }}
-            />
-            <Route
-              exact
-              path="/signup"
-              render={() =>
-                user ? (
-                  <Redirect to="/" />
-                ) : (
-                  <Auth route={"signup"} userSet={userSet} userGet={userGet} />
-                )
-              }
-            />
 
-            <Route
-              path="/backlog"
-              render={() => {
-                //TODO: find a less repetitive way
-                if (user) {
-                  return (
-                    <div className="page backLogList">
-                      <BacklogListLayout
-                        componentShow={componentShow}
-                        projects={projects}
-                        projectEditorActive={projectEditorActive}
-                      >
-                        {projects.map((project, i) => (
-                          <Backlog
-                            {...project}
-                            editingProjectSelect={editingProjectSelect}
-                            erase={erase}
-                            key={project._id}
-                          />
-                        ))}
-                      </BacklogListLayout>
-                    </div>
-                  );
-                } else {
-                  return <Redirect to="/login" />;
-                }
-              }}
-            />
-            <Route
-              path="/log"
-              render={() => {
-                //TODO: find a less repetitive way
-                if (user) {
-                  return (
-                    <div className="page log">
-                      <Log
-                        componentShow={componentShow}
-                        freeMinsGlobal={freeMinsGlobal}
-                        projects={projects}
-                        refresh={refresh}
-                        sliderChange={sliderChange}
-                        sliderChangeValue={sliderChangeValue}
-                        sliderDragStop={sliderDragStop}
-                      />
-                    </div>
-                  );
-                } else {
-                  return <Redirect to="/login" />;
-                }
-              }}
-            />
-            <Route
+        <Switch>
+          {projectEditorActive && (
+            <ProtectedRoute
               path="/"
-              render={() => {
-                if (user) {
-                  return (
-                    <CurrentProjects
-                      editingProject={editingProject}
-                      freeMinsGlobal={freeMinsGlobal}
-                      projects={projects}
-                      refresh={refresh}
-                      snapShots={snapShots}
-                    />
-                  );
-                } else {
-                  return <Redirect to="/login" />;
-                }
-              }}
+              component={ProjectEditor}
+              isAuthenticated={user ? true : false}
+              componentShow={componentShow}
+              editingProject={editingProject}
+              editingProjectDeselect={editingProjectDeselect}
+              projectEditorClose={projectEditorClose}
+              refresh={refresh}
             />
-          </Switch>
-        </div>
+          )}
+          <Route
+            exact
+            path="/login"
+            render={() => {
+              if (user) {
+                return <Redirect to="/" />;
+              } else {
+                return (
+                  <Auth route={"login"} userSet={userSet} userGet={userGet} />
+                );
+              }
+            }}
+          />
+          <Route
+            exact
+            path="/signup"
+            render={() =>
+              user ? (
+                <Redirect to="/" />
+              ) : (
+                <Auth route={"signup"} userSet={userSet} userGet={userGet} />
+              )
+            }
+          />
+          <ProtectedRoute
+            exact
+            path="/backlog"
+            component={BacklogListLayout}
+            isAuthenticated={user ? true : false}
+            componentShow={componentShow}
+            editingProjectSelect={editingProjectSelect}
+            erase={erase}
+            projects={projects}
+            projectEditorActive={projectEditorActive}
+          />
+          <ProtectedRoute
+            exact
+            path="/log"
+            component={Log}
+            isAuthenticated={user ? true : false}
+            componentShow={componentShow}
+            freeMinsGlobal={freeMinsGlobal}
+            projects={projects}
+            refresh={refresh}
+            sliderChange={sliderChange}
+            sliderChangeValue={sliderChangeValue}
+            sliderDragStop={sliderDragStop}
+          />
+          <ProtectedRoute
+            path="/"
+            component={CurrentProjects}
+            isAuthenticated={user ? true : false}
+            editingProject={editingProject}
+            freeMinsGlobal={freeMinsGlobal}
+            projects={projects}
+            refresh={refresh}
+            snapShotDailyRefresh={snapShotDailyRefresh}
+            snapShots={snapShots}
+          />
+        </Switch>
       </div>
     </Router>
   );

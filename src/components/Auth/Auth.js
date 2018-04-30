@@ -7,19 +7,20 @@ import FlatButton from "material-ui/FlatButton";
 
 import AuthContainer from "./AuthContainer";
 
-import AuthStyle from "./AuthStyles.js";
+import appStyle from "../App/AppStyles.js";
+import authStyle from "./AuthStyles.js";
 
 const Auth = props => {
   const { handleChange, handleSubmit, route } = props;
   return (
-    <div style={AuthStyle.form}>
+    <div style={authStyle.form}>
       <div>
         <TextField
           name="email"
           type="email"
-          placeholder="example@email.com"
+          floatingLabelText="email"
           onChange={handleChange}
-          style={AuthStyle.textArea}
+          inputStyle={authStyle.authText}
         />
       </div>
       <div>
@@ -27,20 +28,26 @@ const Auth = props => {
           type="password"
           onChange={handleChange}
           name="password"
-          placeholder="password"
+          floatingLabelText="password"
         />
       </div>
       <div>
         <RaisedButton
-          style={{ margin: "5px" }}
+          style={appStyle.button}
+          labelStyle={{ ...appStyle.font, ...authStyle.authText }}
           label={route === "login" ? "Log In" : "Sign up"}
           onClick={handleSubmit}
         />
-        {route === "login" && (
-          <Link to="/signup" style={AuthStyle.links}>
-            Sign Up
-          </Link>
-        )}
+        <Link
+          to={route === "login" ? "/signup" : "/login"}
+          style={{
+            ...appStyle.font,
+            ...authStyle.authText,
+            ...appStyle.link
+          }}
+        >
+          {route === "login" ? "Sign up" : "Log In"}
+        </Link>
       </div>
     </div>
   );

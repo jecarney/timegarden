@@ -1,6 +1,6 @@
 import React from "react";
 
-import currentProjectsStyle from "./CurrentProjectsStyles.js";
+import Page from "../Layout/Page";
 
 import CurrentProjectsContainer from "./CurrentProjectsContainer";
 import CurrentProject from "./CurrentProject/CurrentProject.js";
@@ -8,11 +8,11 @@ import CurrentProject from "./CurrentProject/CurrentProject.js";
 const CurrentProjects = props => {
   const { currentProjects } = props;
   return (
-    <div style={currentProjectsStyle.background}>
+    <Page extraStyles={{ backgroundImage: 'url("/grass.jpg")' }}>
       {currentProjects.map((project, i) => (
         <CurrentProject key={project._id} {...project} />
       ))}
-    </div>
+    </Page>
   );
 };
 

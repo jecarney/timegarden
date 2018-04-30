@@ -1,8 +1,4 @@
 const backlogListStyle = {
-  background: {
-    backgroundColor: "#4caf50",
-    height: "100%"
-  },
   greyOut: {
     height: "100%",
     position: "absolute",

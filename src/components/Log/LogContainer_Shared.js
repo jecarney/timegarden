@@ -27,15 +27,13 @@ const LogContainer_Shared = (INITIAL_STATE, route) => WrappedComponent => {
 
     render() {
       return (
-        <div>
-          <WrappedComponent
-            {...this.state}
-            {...this.props}
-            currentLogGet={this.currentLogGet}
-            sliderChange={this.sliderChange}
-            sliderDragStop={this.sliderDragStop}
-          />
-        </div>
+        <WrappedComponent
+          {...this.state}
+          {...this.props}
+          currentLogGet={this.currentLogGet}
+          sliderChange={this.sliderChange}
+          sliderDragStop={this.sliderDragStop}
+        />
       );
     }
   };

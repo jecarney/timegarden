@@ -2,6 +2,8 @@ import React from "react";
 import Slider from "material-ui/Slider";
 import RaisedButton from "material-ui/RaisedButton";
 
+import Page from "../Layout/Page";
+
 import LogContainer_Shared from "./LogContainer_Shared";
 import ProjectLog from "./ProjectLog/ProjectLog";
 
@@ -28,7 +30,7 @@ const Log = props => {
   };
 
   return (
-    <div style={LogStyle.background}>
+    <Page extraStyles={{ backgroundColor: "grey" }}>
       <h2>Garden Log</h2>
       <div
         style={{
@@ -64,7 +66,7 @@ const Log = props => {
           );
         }
       })}
-    </div>
+    </Page>
   );
 };
 

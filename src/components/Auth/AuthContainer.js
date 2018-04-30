@@ -27,10 +27,8 @@ export default function AuthContainer(WrappedComponent) {
           if (res.status === 200) {
             if (route === "login") {
               this.setLocalToken(res.data.payload);
-              this.props.snapShotDailyRefresh();
             } else if (route === "signup") {
               this.userSet(res.data.payload);
-              this.props.snapShotDailyRefresh();
             }
           }
         });

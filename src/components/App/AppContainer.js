@@ -151,12 +151,15 @@ class AppContainer extends Component {
           //   date: todaysDate,
           //   user
           // });
-          const snapShots = [ {
-            freeMins: freeMinsGlobal,
-            projects,
-            date: todaysDate,
-            user
-          }, ...payload];
+          const snapShots = [
+            {
+              freeMins: freeMinsGlobal,
+              projects,
+              date: todaysDate,
+              user
+            },
+            ...payload
+          ];
           // console.log('snapShots in snapShotGet');
           // console.log(snapShots);
           this.setState({ snapShots });
@@ -166,11 +169,12 @@ class AppContainer extends Component {
   };
 
   componentDidMount() {
+    document.body.style.margin = "0"; //removing 8px auto margin
     //console.log("componentDidMount");
     this.userGet();
     const todaysDate = parseInt(moment().format("YYYYMMDD"));
     this.setState({ todaysDate });
-    this.snapShotDailyRefresh();
+    // this.snapShotDailyRefresh();
   }
 
   render() {

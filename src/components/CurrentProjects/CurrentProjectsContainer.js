@@ -3,6 +3,10 @@ import React, { Component } from "react";
 
 export default function CurrentProjectsContainer(WrappedComponent) {
   return class extends Component {
+    componentDidMount() {
+      this.props.snapShotDailyRefresh();
+    }
+
     render() {
       const { freeMinsGlobal, projects, snapShots } = this.props;
 
@@ -74,9 +78,6 @@ export default function CurrentProjectsContainer(WrappedComponent) {
         // console.log(project.projectName);
         // console.log(snapShots);
         return snapShots.slice(0, 7).every(snapShot => {
-
-
-
           const proportionEffort = snapShotProportionByProject(
             snapShot,
             project._id
