@@ -1,9 +1,8 @@
 //TODO: if user can't login, post message
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import RaisedButton from "material-ui/RaisedButton";
 import TextField from "material-ui/TextField";
-import FlatButton from "material-ui/FlatButton";
 
 import AuthContainer from "./AuthContainer";
 

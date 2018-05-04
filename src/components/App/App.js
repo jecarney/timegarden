@@ -19,7 +19,6 @@ import ProtectedRoute from "../Auth/ProtectedRoute";
 
 const App = props => {
   const {
-    backlogListActive,
     componentShow,
     currentPercentEffort,
     editingProject,
@@ -27,8 +26,6 @@ const App = props => {
     editingProjectSelect,
     erase,
     freeMinsGlobal,
-    logActive,
-    projectEditorActive,
     projectEditorClose,
     projects,
     refresh,
@@ -79,23 +76,19 @@ const App = props => {
               <Link to="/log" style={appStyle.links}>
                 Today's Log
               </Link>
+              <Link to="/edit" style={appStyle.links}>
+                Add New
+              </Link>
+              <FlatButton
+                label="Save Yesterday"
+                onClick={snapShotDailyRefresh}
+                style={appStyle.font}
+              />
             </div>
           )}
         </header>
 
         <Switch>
-          {projectEditorActive && (
-            <ProtectedRoute
-              path="/"
-              component={ProjectEditor}
-              isAuthenticated={user ? true : false}
-              componentShow={componentShow}
-              editingProject={editingProject}
-              editingProjectDeselect={editingProjectDeselect}
-              projectEditorClose={projectEditorClose}
-              refresh={refresh}
-            />
-          )}
           <Route
             exact
             path="/login"
@@ -129,7 +122,6 @@ const App = props => {
             editingProjectSelect={editingProjectSelect}
             erase={erase}
             projects={projects}
-            projectEditorActive={projectEditorActive}
           />
           <ProtectedRoute
             exact
@@ -143,6 +135,16 @@ const App = props => {
             sliderChange={sliderChange}
             sliderChangeValue={sliderChangeValue}
             sliderDragStop={sliderDragStop}
+          />
+          <ProtectedRoute
+            path="/edit"
+            component={ProjectEditor}
+            isAuthenticated={user ? true : false}
+            componentShow={componentShow}
+            editingProject={editingProject}
+            editingProjectDeselect={editingProjectDeselect}
+            projectEditorClose={projectEditorClose}
+            refresh={refresh}
           />
           <ProtectedRoute
             path="/"

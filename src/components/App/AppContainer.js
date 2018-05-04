@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import moment from "moment";
+import { Redirect } from "react-router-dom";
 
 import App from "./App";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -10,12 +11,9 @@ import { getToken, removeToken } from "../../services/tokenService";
 
 class AppContainer extends Component {
   state = {
-    backlogListActive: false,
     currentPercentEffort: 0,
     editingProject: null,
     freeMinsGlobal: 0,
-    logActive: false,
-    projectEditorActive: false,
     projects: [],
     snapShots: [],
     todaysDate: null,
@@ -58,7 +56,6 @@ class AppContainer extends Component {
       this.state.projects.find(project => project._id === _id)
     );
     this.setState({ editingProject });
-    this.componentShow("projectEditorActive", true);
   };
 
   editingProjectDeselect = () => {
@@ -125,11 +122,10 @@ class AppContainer extends Component {
 
   snapShotDailyRefresh = () => {
     // const { todaysDate } = this.state;
-    const todaysDate = parseInt(moment().format("YYYYMMDD"));
 
     const token = getToken();
     axios
-      .get(`/snapShot/dailyRefresh/${todaysDate}`, {
+      .get("/snapShot/dailyRefresh", {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(this.refresh);

@@ -8,23 +8,18 @@ import Backlog from "../BacklogList/Backlog/Backlog";
 import backloglistStyle from "./BacklogListStyles.js";
 //TODO: rename BackLogListLayout to ProjectList, rename BackLog to Project
 const BacklogListLayout = props => {
-  const {
-    children,
-    componentShow,
-    editingProjectSelect,
-    erase,
-    projectEditorActive,
-    projects
-  } = props;
-  let greyOut = projectEditorActive
-    ? { display: "block" }
-    : { display: "none" };
+  const { componentShow, editingProjectSelect, erase, projects } = props;
+
+  const openEditor = () => {
+    props.history.push("/edit");
+  };
+
   return (
     <Page extraStyles={{ backgroundColor: "#4caf50" }}>
       <RaisedButton
         style={{ margin: "5px" }}
         label="New"
-        onClick={() => componentShow("projectEditorActive", true)}
+        onClick={openEditor}
       />
       {projects.map((project, i) => (
         <Backlog
@@ -32,9 +27,9 @@ const BacklogListLayout = props => {
           editingProjectSelect={editingProjectSelect}
           erase={erase}
           key={project._id}
+          openEditor={openEditor}
         />
       ))}
-      <div style={{ ...backloglistStyle.greyOut, ...greyOut }} />
     </Page>
   );
 };

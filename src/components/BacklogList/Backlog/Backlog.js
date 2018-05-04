@@ -1,22 +1,25 @@
 import React from "react";
 import RaisedButton from "material-ui/RaisedButton";
-import Avatar from "material-ui/Avatar";
 
 import BacklogStyle from "./BacklogStyles";
 
 const Backlog = props => {
-  const { erase, description, _id, projectName, editingProjectSelect } = props;
+  const {
+    editingProjectSelect,
+    erase,
+    description,
+    _id,
+    openEditor,
+    projectName
+  } = props;
   const getSeedImage = _id => {
     switch (_id) {
       case "5ad2a0f05ad56a2eb723a2c2":
         return "seed1";
-        break;
       case "5ad2a10f5ad56a2eb723a2c3":
         return "seed2";
-        break;
       case "5ad2a1445ad56a2eb723a2c4":
         return "seed3";
-        break;
       default:
         return "seed1";
     }
@@ -44,7 +47,10 @@ const Backlog = props => {
       <RaisedButton
         style={{ margin: "5px" }}
         label="Edit Project"
-        onClick={() => editingProjectSelect(_id)}
+        onClick={() => {
+          editingProjectSelect(_id);
+          openEditor();
+        }}
       />
     </div>
   );

@@ -8,15 +8,14 @@ const CurrentProject = props => {
     _id,
     projectName,
     rewardToday,
-    rewardThisWeek,
-    snapShots
+    rewardThisWeek
   } = props;
 
   const returnPercent = proportion => {
-    return Math.floor(proportion * 100);
+    return Math.floor(proportion * 100) + "%";
   };
-  const bedStyle = returnPercent(goalProportionEffort);
-  const plantStyle = returnPercent(avgEffortProportion);
+  const goalPercent = returnPercent(goalProportionEffort);
+  // const plantStyle = returnPercent(avgEffortProportion);
 
   const getPlantImage = () => {
     if (age <= 1) {
@@ -25,9 +24,9 @@ const CurrentProject = props => {
       return "sprout2";
     } else if (age <= 3) {
       return "lettuce";
-    } else if (age <=10) {
+    } else if (age <= 10) {
       return "flower";
-    }else  {
+    } else {
       return "tree";
     }
   };
@@ -35,10 +34,10 @@ const CurrentProject = props => {
   return (
     <div
       style={{
-        height: bedStyle + "%",
+        height: goalPercent,
         margin: "1em 0",
         backgroundImage: 'url("/soil.jpg")',
-        position: "relative",
+        position: "relative"
       }}
     >
       <p
@@ -46,31 +45,31 @@ const CurrentProject = props => {
           color: "white"
         }}
       >
-        projectName: {projectName}
+        {projectName + ": "}
+        {goalPercent}
       </p>
-      {rewardThisWeek&&(<img src="raccoon.png" height="200"  align="right"/>)}
+      {rewardThisWeek && <img src="raccoon.png" height="200" align="right" />}
       <div
         style={{
-          height:
-            returnPercent(avgEffortProportion / goalProportionEffort) + "%",
+          height: returnPercent(avgEffortProportion / goalProportionEffort),
           backgroundImage: plantImage,
-          backgroundSize: "contain",
+          backgroundSize: "contain"
         }}
       />
-    {rewardToday&&(
-      <div
+      {rewardToday && (
+        <div
           style={{
             backgroundImage: 'url("/butterflies2.png")',
             backgroundSize: "contain",
-            backgroundRepeat:"no-repeat",
+            backgroundRepeat: "no-repeat",
             position: "absolute",
-            top:0,
-            right:0,
-            left:0,
-            bottom:0
+            top: 0,
+            right: 0,
+            left: 0,
+            bottom: 0
           }}
         />
-    )}
+      )}
     </div>
   );
 };

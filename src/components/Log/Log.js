@@ -1,23 +1,18 @@
 import React from "react";
 import Slider from "material-ui/Slider";
-import RaisedButton from "material-ui/RaisedButton";
 
 import Page from "../Layout/Page";
 
 import LogContainer_Shared from "./LogContainer_Shared";
 import ProjectLog from "./ProjectLog/ProjectLog";
 
-import LogStyle from "./LogStyles.js";
-
 const Log = props => {
   const {
-    componentShow,
     freeMinsGlobal,
     projects,
     refresh,
     sliderChange,
-    sliderDragStop,
-    sliderChangeValue
+    sliderDragStop
   } = props;
 
   const freeMinsUnspent = () => {
@@ -64,6 +59,8 @@ const Log = props => {
               freeMinsUnspent={freeMinsUnspent}
             />
           );
+        } else {
+          return null;
         }
       })}
     </Page>

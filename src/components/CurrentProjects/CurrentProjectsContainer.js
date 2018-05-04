@@ -3,9 +3,9 @@ import React, { Component } from "react";
 
 export default function CurrentProjectsContainer(WrappedComponent) {
   return class extends Component {
-    componentDidMount() {
-      this.props.snapShotDailyRefresh();
-    }
+    // componentDidMount() {
+    //   // this.props.snapShotDailyRefresh();
+    // }
 
     render() {
       const { freeMinsGlobal, projects, snapShots } = this.props;
@@ -60,7 +60,6 @@ export default function CurrentProjectsContainer(WrappedComponent) {
         return snapShot.projects.find(snapShotProject => {
           return id === snapShotProject._id;
         });
-        return false;
       };
 
       const rewardForDay = project => {

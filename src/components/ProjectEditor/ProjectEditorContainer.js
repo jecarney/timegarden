@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+
 import { getToken } from "../../services/tokenService";
 
 export default function ProjectEditorContainer(WrappedComponent) {
@@ -54,13 +55,14 @@ export default function ProjectEditorContainer(WrappedComponent) {
       const { refresh } = this.props;
       refresh();
       this.reinit();
-      this.props.componentShow("projectEditorActive", false);
       if (this.props.editingProject !== null) {
         this.props.editingProjectDeselect();
       }
+      this.props.history.push("/");
     };
 
     projectPostNew = (attributes, authHeader) => {
+      //TODO: need to implement auth here
       const token = getToken();
       axios
         .post("/project", attributes, authHeader)
@@ -106,16 +108,14 @@ export default function ProjectEditorContainer(WrappedComponent) {
     render() {
       //TODO: do I need to pass props through? shouldn't, but wasn't getting them in wrappedcomponents
       return (
-        <div>
-          <WrappedComponent
-            {...this.state}
-            {...this.props}
-            handleChange={this.handleChange}
-            handleSubmit={this.handleSubmit}
-            handleSubmitSuccess={this.handleSubmitSuccess}
-            reinit={this.reinit}
-          />
-        </div>
+        <WrappedComponent
+          {...this.state}
+          {...this.props}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+          handleSubmitSuccess={this.handleSubmitSuccess}
+          reinit={this.reinit}
+        />
       );
     }
   };
