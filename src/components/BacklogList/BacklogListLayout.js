@@ -15,7 +15,7 @@ const BacklogListLayout = props => {
   };
 
   return (
-    <Page extraStyles={{ backgroundColor: "#4caf50" }}>
+    <Page extraStyles={backloglistStyle.page}>
       <RaisedButton
         style={{ margin: "5px" }}
         label="New"

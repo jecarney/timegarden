@@ -128,7 +128,10 @@ class AppContainer extends Component {
       .get("/snapShot/dailyRefresh", {
         headers: { Authorization: `Bearer ${token}` }
       })
-      .then(this.refresh);
+      .then(res => {
+        console.log(res);
+        // this.refresh();
+      });
   };
 
   snapShotGet = () => {
@@ -170,6 +173,7 @@ class AppContainer extends Component {
     this.userGet();
     const todaysDate = parseInt(moment().format("YYYYMMDD"));
     this.setState({ todaysDate });
+    this.refresh();
     // this.snapShotDailyRefresh();
   }
 

@@ -11,11 +11,12 @@ const CurrentProject = props => {
     rewardThisWeek
   } = props;
 
-  const returnPercent = proportion => {
+  const percentFromProportion = proportion => {
     return Math.floor(proportion * 100) + "%";
   };
-  const goalPercent = returnPercent(goalProportionEffort);
-  // const plantStyle = returnPercent(avgEffortProportion);
+  const goalPercent = percentFromProportion(goalProportionEffort);
+
+  // const plantStyle = percentFromProportion(avgEffortProportion);
 
   const getPlantImage = () => {
     if (age <= 1) {
@@ -34,8 +35,9 @@ const CurrentProject = props => {
   return (
     <div
       style={{
-        height: goalPercent,
-        margin: "1em 0",
+        height: percentFromProportion(goalProportionEffort * 2 - 1),
+        width: percentFromProportion(goalProportionEffort * 2 - 1),
+        margin: "1%",
         backgroundImage: 'url("/soil.jpg")',
         position: "relative"
       }}
@@ -51,7 +53,12 @@ const CurrentProject = props => {
       {rewardThisWeek && <img src="raccoon.png" height="200" align="right" />}
       <div
         style={{
-          height: returnPercent(avgEffortProportion / goalProportionEffort),
+          height: percentFromProportion(
+            Math.pow(avgEffortProportion / goalProportionEffort, 2)
+          ),
+          width: percentFromProportion(
+            Math.pow(avgEffortProportion / goalProportionEffort, 2)
+          ),
           backgroundImage: plantImage,
           backgroundSize: "contain"
         }}
