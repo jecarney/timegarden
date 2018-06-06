@@ -4,7 +4,7 @@ import React, { Component } from "react";
 export default function CurrentProjectsContainer(WrappedComponent) {
   return class extends Component {
     // componentDidMount() {
-    //   // this.props.snapShotDailyRefresh();
+    //   this.props.snapShotDailyRefresh();
     // }
 
     render() {

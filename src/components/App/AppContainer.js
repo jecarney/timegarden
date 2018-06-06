@@ -33,6 +33,7 @@ class AppContainer extends Component {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => {
+        console.log("currentlogget then");
         const { payload } = res.data;
         if (payload) {
           this.setState({ freeMinsGlobal: payload.freeMins });
